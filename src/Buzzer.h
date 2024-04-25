@@ -3,21 +3,20 @@
 
 #include "Arduino.h"
 
+#define BUZZER_ALARM_FREQUENCY 500
+
 class Buzzer {
 private:
-  int buzzer_pin;
-  int alarm_frequency;   // Maybe can move to Constants.h
-  int warning_frequency; // Maybe can move to Constants.h
-
-  void beep(int frequency, int on_delay, int off_delay);
+  uint8_t buzzer_pin;
 
 public:
   bool buzzer_state;
   float buzzer_duration;
 
-  Buzzer(int pin);
+  explicit Buzzer(uint8_t pin);
   void on();
   void off();
+  void beep(int time_delay);
 };
 
 #endif

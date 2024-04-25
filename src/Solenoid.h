@@ -5,13 +5,13 @@
 
 class Solenoid {
 private:
-  int solenoid_pin;
+  uint8_t solenoid_pin;
 
 public:
   bool lock_state;
   float unlocked_duration;
 
-  Solenoid(int pin);
+  explicit Solenoid(uint8_t pin);
   void lock();
   void unlock();
 };

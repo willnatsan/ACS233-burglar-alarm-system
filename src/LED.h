@@ -5,14 +5,14 @@
 
 class LED {
 private:
-  int led_pin;
+  uint8_t led_pin;
   bool led_state;
 
 public:
-  LED(int pin);
+  explicit LED(uint8_t pin);
   void on();
   void off();
-  void blink(int on_delay, int off_delay);
+  void blink(int time_delay);
 };
 
 #endif
