@@ -6,7 +6,7 @@
 class Sensor {
 private:
   uint8_t sensor_pin;
-
+  
 public:
   explicit Sensor(uint8_t pin);
   bool read();
