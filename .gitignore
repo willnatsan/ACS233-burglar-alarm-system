@@ -32,4 +32,4 @@
 *.app
 
 # VS Code Configuration
-.vscode/*.json
+.vscode/
