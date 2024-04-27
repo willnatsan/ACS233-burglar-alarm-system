@@ -3,10 +3,11 @@
 
 #include "Arduino.h"
 #include "Buzzer.h"
-#include "Constants.h"
 #include "DisplayInterface.h"
-#include "LEDs.h"
-#include "Sensors.h"
+#include "LED.h"
+#include "Sensor.h"
 #include "Solenoid.h"
+#include "States.h"
+
 
 #endif
