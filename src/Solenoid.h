@@ -9,7 +9,7 @@ private:
 
 public:
   bool lock_state;
-  float unlocked_duration;
+  float last_unlocked_at;
 
   explicit Solenoid(uint8_t pin);
   void lock();

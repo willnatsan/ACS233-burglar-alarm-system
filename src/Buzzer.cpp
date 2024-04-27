@@ -2,6 +2,7 @@
 
 Buzzer::Buzzer(uint8_t pin) {
   this->buzzer_pin = pin;
+  this->last_buzzed_at = -1;
   this->buzzer_state = false;
   pinMode(this->buzzer_pin, OUTPUT);
 }

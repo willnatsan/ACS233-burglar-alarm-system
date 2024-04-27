@@ -11,7 +11,7 @@ private:
 
 public:
   bool buzzer_state;
-  float buzzer_duration;
+  float last_buzzed_at;
 
   explicit Buzzer(uint8_t pin);
   void on();
