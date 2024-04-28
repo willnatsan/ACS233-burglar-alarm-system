@@ -7,13 +7,14 @@
 #include "LED.h"
 #include "Sensor.h"
 #include "Solenoid.h"
-#include "States.h"
+#include "ENUMS.h"
 
 class Controller {
     private:
         float UNLOCK_TIMEOUT = 10000; // Random value for now
         float ALARM_TIMEOUT = 10000; // Random value for now
         float PIN_ENTRY_TIMEOUT = 10000; // Random value for now
+        float MOTION_SENSOR_TIMEOUT = 10000; // Random value for now
 
         float last_armed_at;
 
