@@ -12,7 +12,7 @@
 class Controller {
     private:
         // System Timeouts 
-        float UNLOCK_TIMEOUT = 10000; // Random value for now
+        float DOOR_UNLOCK_TIMEOUT = 10000; // Random value for now
         float ALARM_TIMEOUT = 10000; // Random value for now
         float PIN_ENTRY_TIMEOUT = 10000; // Random value for now
         float MOTION_SENSOR_TIMEOUT = 10000; // Random value for now
