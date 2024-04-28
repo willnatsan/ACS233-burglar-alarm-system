@@ -19,7 +19,6 @@ class MagneticSensor : public Sensor {
 public:
   bool mag_state;
   float last_opened_at;
-  float last_closed_at;
 
   explicit MagneticSensor(uint8_t pin, void (*isr)());
   void setup();

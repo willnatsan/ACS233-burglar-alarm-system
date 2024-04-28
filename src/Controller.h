@@ -19,7 +19,7 @@ class Controller {
 
         MagneticSensor *door;
         MagneticSensor *window;
-        PIRSensor *pir;
+        PIRSensor *pir; 
         ButtonSensor *button;
 
         Buzzer *buzzer;

@@ -18,7 +18,6 @@ bool Sensor::read() const { return digitalRead(this->sensor_pin); }
 MagneticSensor::MagneticSensor(uint8_t pin, void (*isr)()) : Sensor(pin, isr) {
   this->mag_state = this->read();
   this->last_opened_at = -1;
-  this->last_closed_at = -1;
 }
 
 void MagneticSensor::setup() {
