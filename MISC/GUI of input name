@@ -1,0 +1,38 @@
+import tkinter as tk
+from tkinter import messagebox
+
+def submit_names():
+    surname = surname_entry.get()
+    name = name_entry.get()
+    if surname and name:  # Check if both fields are not empty
+        messagebox.showinfo("Name Registered", f"Registered Surname: {surname}\nName: {name}")
+        surname_entry.delete(0, tk.END)
+        name_entry.delete(0, tk.END)
+    else:
+        messagebox.showerror("Error", "Both fields are required. Please enter your surname and name.")
+
+# Create the main window
+root = tk.Tk()
+root.title("Name Registration")
+root.geometry("400x200")
+
+# Create a label and entry for the surname
+surname_label = tk.Label(root, text="Enter your surname:")
+surname_label.pack(pady=(20, 5))  # Add some vertical padding
+
+surname_entry = tk.Entry(root, width=20)
+surname_entry.pack()
+
+# Create a label and entry for the name
+name_label = tk.Label(root, text="Enter your name:")
+name_label.pack(pady=(20, 5))
+
+name_entry = tk.Entry(root, width=20)
+name_entry.pack()
+
+# Create a button to submit the information
+submit_button = tk.Button(root, text="Register", command=submit_names)
+submit_button.pack(pady=20)
+
+# Start the event loop
+root.mainloop()
