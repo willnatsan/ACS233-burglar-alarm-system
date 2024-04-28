@@ -2,13 +2,14 @@
 #define ACS233_SOLENOID
 
 #include "Arduino.h"
+#include "ENUMS.h"
 
 class Solenoid {
 private:
   uint8_t solenoid_pin;
 
 public:
-  bool lock_state;
+  SOLENOID_STATE solenoid_state;
   float last_unlocked_at;
 
   explicit Solenoid(uint8_t pin);

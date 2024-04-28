@@ -6,7 +6,6 @@
 class LED {
 private:
   uint8_t led_pin;
-  bool led_state;
 
 public:
   explicit LED(uint8_t pin);

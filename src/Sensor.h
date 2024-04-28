@@ -2,6 +2,7 @@
 #define ACS233_SENSOR
 
 #include "Arduino.h"
+#include "ENUMS.h"
 
 class Sensor {
 protected:
@@ -17,7 +18,7 @@ public:
 // Magnetic Sensor for the door and window
 class MagneticSensor : public Sensor {
 public:
-  bool mag_state;
+  MAGNETIC_SENSOR_STATE mag_state;
   float last_opened_at;
 
   explicit MagneticSensor(uint8_t pin, void (*isr)());
@@ -27,7 +28,7 @@ public:
 // PIR Motion Sensor for detecting motion
 class PIRSensor : public Sensor {
 public:
-  bool pir_state;
+  PIR_SENSOR_STATE pir_state;
 
   explicit PIRSensor(uint8_t pin, void (*isr)());
 };
@@ -35,7 +36,7 @@ public:
 // Button Sensor for detecting button press
 class ButtonSensor : public Sensor {
 public:
-  bool button_state;
+  BUTTON_STATE button_state;
 
   explicit ButtonSensor(uint8_t pin, void (*isr)());
   void setup();

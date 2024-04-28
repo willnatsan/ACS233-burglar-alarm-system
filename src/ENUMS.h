@@ -23,8 +23,8 @@ enum SOLENOID_STATE {
 };
 
 enum ALARM_STATE {
-    ON = 0,
-    OFF = 1
+    ON = 1,
+    OFF = 0
 };
 
 // Sensor States

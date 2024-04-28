@@ -36,10 +36,10 @@ class Controller {
                         int solenoid_pin,int buzzer_pin);
         void setup();
         void verify_user();
-        void change_mode(int target_mode);
+        void change_mode(SYSTEM_MODE mode);
         void alarm_on();
         void alarm_off();
-        void handle_unauthorised_entry(int type);
+        void handle_unauthorised_entry(UNAUTHORISED_ENTRY_TYPE type);
         void handle_authorised_entry();
         void check_status();
 

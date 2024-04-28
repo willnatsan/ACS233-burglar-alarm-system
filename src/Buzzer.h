@@ -2,6 +2,7 @@
 #define ACS233_BUZZER
 
 #include "Arduino.h"
+#include "ENUMS.h"
 
 #define BUZZER_ALARM_FREQUENCY 500
 
@@ -10,7 +11,7 @@ private:
   uint8_t buzzer_pin;
 
 public:
-  bool buzzer_state;
+  ALARM_STATE buzzer_state;
   float last_buzzed_at;
 
   explicit Buzzer(uint8_t pin);
