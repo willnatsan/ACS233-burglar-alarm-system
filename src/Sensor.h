@@ -8,9 +8,9 @@ class Sensor {
 protected:
   uint8_t sensor_pin;
   void (*ISRFunction)();
-  
+
 public:
-  int64_t last_triggered_at; 
+  int64_t last_triggered_at;
 
   explicit Sensor(uint8_t pin, void (*isr)());
   void setup();

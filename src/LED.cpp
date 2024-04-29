@@ -5,13 +5,9 @@ LED::LED(uint8_t pin) {
   pinMode(this->led_pin, OUTPUT);
 }
 
-void LED::on() {
-  digitalWrite(this->led_pin, HIGH);
-}
+void LED::on() { digitalWrite(this->led_pin, HIGH); }
 
-void LED::off() {
-  digitalWrite(this->led_pin, LOW);
-}
+void LED::off() { digitalWrite(this->led_pin, LOW); }
 
 void LED::blink(int time_delay) {
   this->on();
