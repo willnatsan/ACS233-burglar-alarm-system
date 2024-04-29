@@ -39,8 +39,8 @@ enum PIR_SENSOR_STATE {
 };
 
 enum MAGNETIC_SENSOR_STATE {
-    OPEN = 0,
-    CLOSED = 1
+    OPEN = 1,
+    CLOSED = 0
 };
 
 #endif
