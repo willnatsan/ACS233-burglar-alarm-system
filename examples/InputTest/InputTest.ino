@@ -12,7 +12,6 @@ int64_t lastMagneticSensorChange = millis();
 
 int pirSensor = 20;
 int pirSensorState;
-int lastPirSensorState;
 
 void setup() {
   // put your setup code here, to run once:
@@ -45,7 +44,12 @@ void loop() {
     }
   }
 
+  pirSensorState = digitalRead(pirSensor);
+
   if (pirSensorState == HIGH){
-      Serial.println("Motion Detected!");
-    }
+    Serial.println("Motion Detected!");
+  }
+  else{
+    Serial.println("No Motion");
+  }
 }
