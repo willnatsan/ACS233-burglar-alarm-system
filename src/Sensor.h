@@ -10,6 +10,8 @@ protected:
   void (*ISRFunction)();
   
 public:
+  int64_t last_triggered_at; 
+
   explicit Sensor(uint8_t pin, void (*isr)());
   void setup();
   bool read() const;
@@ -19,7 +21,6 @@ public:
 class MagneticSensor : public Sensor {
 public:
   MAGNETIC_SENSOR_STATE mag_state;
-  float last_opened_at;
 
   explicit MagneticSensor(uint8_t pin, void (*isr)());
   void setup();

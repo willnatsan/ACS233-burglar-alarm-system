@@ -2,6 +2,7 @@
 
 Sensor::Sensor(uint8_t pin, void (*isr)()) {
   this->sensor_pin = pin;
+  this->last_triggered_at = -1; 
   this->ISRFunction = isr;
 }
 
@@ -17,7 +18,6 @@ bool Sensor::read() const { return digitalRead(this->sensor_pin); }
 // Magnetic Sensor for the door and window
 MagneticSensor::MagneticSensor(uint8_t pin, void (*isr)()) : Sensor(pin, isr) {
   this->mag_state = (MAGNETIC_SENSOR_STATE) this->read();
-  this->last_opened_at = -1;
 }
 
 void MagneticSensor::setup() {
