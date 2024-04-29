@@ -9,14 +9,14 @@
 #include "Solenoid.h"
 #include "ENUMS.h"
 
+#define DOOR_UNLOCK_TIMEOUT 10000 // random value for now
+#define ALARM_TIMEOUT 10000 // random value for now
+#define PIN_ENTRY_TIMEOUT 10000 // random value for now
+#define MOTION_SENSOR_TIMEOUT 10000 // random value for now
+#define DEBOUNCE_DURATION 100
+
 class Controller {
     private:
-        // System Timeouts 
-        int64_t DOOR_UNLOCK_TIMEOUT = 10000; // Random value for now
-        int64_t ALARM_TIMEOUT = 10000; // Random value for now
-        int64_t PIN_ENTRY_TIMEOUT = 10000; // Random value for now
-        int64_t MOTION_SENSOR_TIMEOUT = 10000; // Random value for now
-
         // Sensors
         MagneticSensor *door;
         MagneticSensor *window;
@@ -31,7 +31,7 @@ class Controller {
         LED *away_led;
         
         // Time at which the system was last armed
-        float last_armed_at;
+        int64_t last_armed_at;
 
         // Tracking if the system recognises an authorised user or not
         bool authorisation_status;
