@@ -1,2 +1,2 @@
 # Overview
-This folder contains custom "libraries" (Header & C++ Files) for the different objects that make up the full system. Implementing OOP design.
+This folder contains uploadable sketch (.ino) files for the project, including the main burglarAlarm file as well as any test files to be written for testing individual components / pieces of code.
