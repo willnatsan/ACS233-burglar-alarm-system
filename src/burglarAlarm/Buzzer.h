@@ -5,6 +5,7 @@
 #include "ENUMS.h"
 
 #define BUZZER_ALARM_FREQUENCY 500
+#define BUZZER_DELAY 100
 
 class Buzzer {
 private:
@@ -17,7 +18,7 @@ public:
   explicit Buzzer(uint8_t pin);
   void on();
   void off();
-  void beep(int time_delay);
+  void beep();
 };
 
 #endif

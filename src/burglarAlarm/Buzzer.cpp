@@ -17,12 +17,12 @@ void Buzzer::off() {
   this->buzzer_state = BUZZER_STATE::OFF;
 }
 
-void Buzzer::beep(int time_delay) {
+void Buzzer::beep() {
   if (this->buzzer_state) {
     off();
-    delay(time_delay);
+    delay(BUZZER_DELAY);
   } else {
     on();
-    delay(time_delay);
+    delay(BUZZER_DELAY);
   }
 }

@@ -8,10 +8,10 @@ enum SYSTEM_MODE { DISARMED = 0, HOME = 1, AWAY = 2 };
 
 // Types of possible unauthorised entries (Handled slighlty differently in the
 // system)
-enum UNAUTHORISED_ENTRY_TYPE {
-  MAGNETIC_SENSOR_TRIGGERED = 0,
-  PIR_SENSOR_TRIGGERED = 1,
-};
+// enum UNAUTHORISED_ENTRY_TYPE {
+//   MAGNETIC_SENSOR_TRIGGERED = 0,
+//   PIR_SENSOR_TRIGGERED = 1,
+// };
 
 // Actuator States
 enum SOLENOID_STATE { LOCKED = 0, UNLOCKED = 1 };

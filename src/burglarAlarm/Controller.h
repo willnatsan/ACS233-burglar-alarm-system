@@ -9,7 +9,6 @@
 #include "Sensor.h"
 #include "Solenoid.h"
 
-#define DOOR_UNLOCK_TIMEOUT 10000
 #define ALARM_TIMEOUT 20000 // The limit is 20 mins, but for testing 20s is used
 #define PIN_ENTRY_TIMEOUT 10000
 
@@ -42,19 +41,21 @@ private:
   bool authorisation_status;
   String correct_pin;
 
-  // static Controller *controller_handler; // Static pointer to the controller
-  // object (For ISRs)
+  static Controller
+      *controller_handler; // Static pointer to the controller object (For ISRs)
 
   // ISR functions must be static so that they can be attached to the interrupt
-  static void magnetic_sensor_isr();
-  static void pir_sensor_isr();
-  static void button_isr();
+  void magnetic_sensor_isr();
+  void pir_sensor_isr();
+  void button_isr();
 
-  String change_mode(SYSTEM_MODE mode);
-  void authorise_user();
+  void change_mode(SYSTEM_MODE mode);
 
-  void handle_unauthorised_entry(UNAUTHORISED_ENTRY_TYPE type);
-  void handle_authorised_entry();
+  //   void start_verification();
+  //   void stop_verification();
+
+  //   void handle_unauthorised_entry(UNAUTHORISED_ENTRY_TYPE type);
+  //   void handle_authorised_entry();
 
   bool check_status();
   void check_timeouts();
@@ -63,7 +64,7 @@ private:
   bool output_test();
 
 public:
-  SYSTEM_MODE current_mode;
+  static SYSTEM_MODE current_mode;
 
   explicit Controller(uint8_t door_mag_pin, uint8_t window_mag_pin,
                       uint8_t pir_pin, uint8_t button_pin,
@@ -76,9 +77,11 @@ public:
   void home_mode(String command);
   void away_mode(String command);
 
-  // static void handle_magnetic_sensor_isr();
-  // static void handle_pir_sensor_isr();
-  // static void handle_button_isr();
+  static void handle_magnetic_sensor_isr() {
+    controller_handler->magnetic_sensor_isr();
+  }
+  static void handle_pir_sensor_isr() { controller_handler->pir_sensor_isr(); }
+  static void handle_button_isr() { controller_handler->button_isr(); }
 };
 
 #endif

@@ -7,10 +7,10 @@ Controller::Controller(uint8_t door_mag_pin, uint8_t window_mag_pin,
                        uint8_t buzzer_led_pin, uint8_t solenoid_pin,
                        uint8_t buzzer_pin) {
   // Initialise sensors
-  door = new MagneticSensor(door_mag_pin, magnetic_sensor_isr);
-  window = new MagneticSensor(window_mag_pin, magnetic_sensor_isr);
-  pir = new PIRSensor(pir_pin, pir_sensor_isr);
-  button = new ButtonSensor(button_pin, button_isr);
+  door = new MagneticSensor(door_mag_pin, handle_magnetic_sensor_isr);
+  window = new MagneticSensor(window_mag_pin, handle_magnetic_sensor_isr);
+  pir = new PIRSensor(pir_pin, handle_pir_sensor_isr);
+  button = new ButtonSensor(button_pin, handle_button_isr);
 
   // Initialise actuators
   buzzer = new Buzzer(buzzer_pin);
@@ -112,7 +112,6 @@ void Controller::home_mode(String command) {
     switch (command.charAt(1)) {
     case 'y':
       solenoid->unlock();
-      solenoid->last_unlocked_at = millis();
       solenoid_led->blink();
       Serial.write("fy");
       break;
@@ -197,7 +196,6 @@ void Controller::away_mode(String command) {
     switch (command.charAt(1)) {
     case 'y':
       solenoid->unlock();
-      solenoid->last_unlocked_at = millis();
       solenoid_led->blink();
       Serial.write("fy");
       break;
@@ -235,21 +233,76 @@ void Controller::away_mode(String command) {
   this->check_timeouts();
 }
 
-void Controller::magnetic_sensor_isr() {}
+void Controller::magnetic_sensor_isr() {
+  if (millis() - door->last_triggered_at >= DEBOUNCE_DURATION) {
+    door->last_triggered_at = millis();
+    door->mag_state = (MAGNETIC_SENSOR_STATE)door->read();
 
-void Controller::pir_sensor_isr() {}
+    if (door->mag_state == MAGNETIC_SENSOR_STATE::CLOSED &&
+        solenoid->solenoid_state == SOLENOID_STATE::UNLOCKED) {
+      solenoid->lock();
+      solenoid_led->off();
+    } else if (door->mag_state == MAGNETIC_SENSOR_STATE::OPEN) {
+      switch (current_mode) {
+      case SYSTEM_MODE::AWAY:
+      case SYSTEM_MODE::HOME:
+        this->last_triggered_at = millis();
+        break;
+      case SYSTEM_MODE::DISARMED:
+      default:
+        break;
+      }
+    }
+  }
+}
 
-void Controller::button_isr() {}
+void Controller::pir_sensor_isr() {
+  pir->last_triggered_at = millis();
+  pir->pir_state = (PIR_SENSOR_STATE)pir->read();
+
+  if (pir->pir_state == PIR_SENSOR_STATE::MOTION_DETECTED &&
+      millis() - pir->last_triggered_at >= MOTION_SENSOR_TIMEOUT) {
+    switch (current_mode) {
+    case SYSTEM_MODE::AWAY:
+      this->last_triggered_at = millis();
+      break;
+    case SYSTEM_MODE::HOME:
+    case SYSTEM_MODE::DISARMED:
+    default:
+      break;
+    }
+  }
+}
+
+void Controller::button_isr() {
+  if (millis() - button->last_triggered_at >= DEBOUNCE_DURATION) {
+    button->last_triggered_at = millis();
+    button->button_state = (BUTTON_STATE)button->read();
+
+    solenoid->unlock();
+    solenoid_led->blink();
+    solenoid->last_unlocked_at = millis();
+  }
+}
+
+void Controller::change_mode(SYSTEM_MODE mode) { this->current_mode = mode; }
+
+bool Controller::check_status() {
+  String message = "st";
+  message += door->mag_state;
+  message += window->mag_state;
+  message += solenoid->solenoid_state;
+  Serial.write(message.c_str());
+
+  if (door->mag_state == MAGNETIC_SENSOR_STATE::CLOSED ||
+      window->mag_state == MAGNETIC_SENSOR_STATE::CLOSED ||
+      solenoid->solenoid_state == SOLENOID_STATE::LOCKED) {
+    return true;
+  }
+  return false;
+}
 
 void Controller::check_timeouts() {
-  // Check if the solenoid has been unlocked for more than the allocated time
-  if (solenoid->solenoid_state == SOLENOID_STATE::UNLOCKED &&
-      millis() - solenoid->last_unlocked_at >= DOOR_UNLOCK_TIMEOUT) {
-    solenoid->lock();
-    solenoid_led->off();
-    solenoid->last_unlocked_at = -1;
-  }
-
   // Check if the user has been authorised within the allocated time
   if (!this->authorisation_status &&
       millis() - last_triggered_at >= PIN_ENTRY_TIMEOUT) {
@@ -265,4 +318,30 @@ void Controller::check_timeouts() {
     buzzer_led->off();
     buzzer->last_buzzed_at = -1;
   }
+}
+
+bool Controller::input_test() {
+  String message = "it";
+  message += door->read();
+  message += window->read();
+  message += pir->read();
+  message += button->read();
+  Serial.write(message.c_str());
+
+  return true;
+}
+
+bool Controller::output_test() {
+  solenoid->unlock();
+  solenoid_led->blink();
+  solenoid->lock();
+
+  buzzer->beep();
+  buzzer_led->blink();
+
+  for (int i = 0; i < 3; i++) {
+    system_mode_leds[i]->blink();
+  }
+
+  return true;
 }
