@@ -31,16 +31,17 @@ private:
 
   // Actuators
   Buzzer *buzzer;
-  Solenoid *lock;
-  LED *diarmed_led;
-  LED *home_led;
-  LED *away_led;
+  Solenoid *solenoid;
 
-  // Tracking if the system recognises an authorised user or not
-  bool authorisation_status;
+  LED *solenoid_led;
+  LED *buzzer_led;
+  LED *system_mode_leds[3];
 
   // Time at which the system was last armed
   int64_t last_armed_at;
+
+  bool authorisation_status;
+  String correct_pin;
 
   // static Controller *controller_handler; // Static pointer to the controller
   // object (For ISRs)
@@ -50,7 +51,7 @@ private:
   static void pir_sensor_isr();
   static void button_isr();
 
-  void change_mode(SYSTEM_MODE mode);
+  String change_mode(SYSTEM_MODE mode);
   void authorise_user();
 
   void alarm_on();
@@ -62,8 +63,8 @@ private:
   void check_status();
   void change_settings();
 
-  void input_test();
-  void output_test();
+  bool input_test();
+  bool output_test();
 
 public:
   SYSTEM_MODE current_mode;
@@ -71,12 +72,13 @@ public:
   explicit Controller(uint8_t door_mag_pin, uint8_t window_mag_pin,
                       uint8_t pir_pin, uint8_t button_pin,
                       uint8_t disarmed_led_pin, uint8_t home_led_pin,
-                      uint8_t away_led_pin, uint8_t solenoid_pin,
+                      uint8_t away_led_pin, uint8_t solenoid_led_pin,
+                      uint8_t buzzer_led_pin, uint8_t solenoid_pin,
                       uint8_t buzzer_pin);
   void setup();
-  void disarmed_mode();
-  void home_mode();
-  void away_mode();
+  void disarmed_mode(String command);
+  void home_mode(String command);
+  void away_mode(String command);
 
   // static void handle_magnetic_sensor_isr();
   // static void handle_pir_sensor_isr();
