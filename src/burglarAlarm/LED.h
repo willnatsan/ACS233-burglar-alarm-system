@@ -3,7 +3,7 @@
 
 #include "Arduino.h"
 
-#define BLINK_DELAY 500
+#define BLINK_DELAY 100
 
 class LED {
 private:
