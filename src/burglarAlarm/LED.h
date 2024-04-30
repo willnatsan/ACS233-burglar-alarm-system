@@ -13,7 +13,7 @@ public:
   explicit LED(uint8_t pin);
   void on();
   void off();
-  void blink(int time_delay);
+  void blink();
 };
 
 #endif

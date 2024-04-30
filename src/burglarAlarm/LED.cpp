@@ -9,9 +9,9 @@ void LED::on() { digitalWrite(this->led_pin, HIGH); }
 
 void LED::off() { digitalWrite(this->led_pin, LOW); }
 
-void LED::blink(int time_delay) {
+void LED::blink() {
   this->on();
-  delay(time_delay);
+  delay(BLINK_DELAY);
   this->off();
-  delay(time_delay);
+  delay(BLINK_DELAY);
 }
