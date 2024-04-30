@@ -9,9 +9,9 @@
 #include "Sensor.h"
 #include "Solenoid.h"
 
-#define DOOR_UNLOCK_TIMEOUT 10000 // random value for now
-#define ALARM_TIMEOUT 10000       // random value for now
-#define PIN_ENTRY_TIMEOUT 10000   // random value for now
+#define DOOR_UNLOCK_TIMEOUT 10000
+#define ALARM_TIMEOUT 20000 // The limit is 20 mins, but for testing 20s is used
+#define PIN_ENTRY_TIMEOUT 10000
 
 // From testing the motion sensor seems to hold a HIGH value for 10-20s after
 // motion is detected A timeout of 25s seems to work well to prevent false
@@ -52,9 +52,6 @@ private:
 
   String change_mode(SYSTEM_MODE mode);
   void authorise_user();
-
-  void alarm_on();
-  void alarm_off();
 
   void handle_unauthorised_entry(UNAUTHORISED_ENTRY_TYPE type);
   void handle_authorised_entry();
