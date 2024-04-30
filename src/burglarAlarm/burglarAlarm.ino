@@ -36,6 +36,8 @@ void loop() {
       // Remove the last character
       command = command.substring(0, command.length() - 1);
     }
+  } else {
+    command = "";
   }
 
   switch (controller.current_mode) {
@@ -49,3 +51,4 @@ void loop() {
     controller.away_mode(command);
     break;
   }
+}
