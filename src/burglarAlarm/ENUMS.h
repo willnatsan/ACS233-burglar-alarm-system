@@ -16,7 +16,7 @@ enum UNAUTHORISED_ENTRY_TYPE {
 // Actuator States
 enum SOLENOID_STATE { LOCKED = 0, UNLOCKED = 1 };
 
-enum ALARM_STATE { ON = 1, OFF = 0 };
+enum BUZZER_STATE { ON = 1, OFF = 0 };
 
 // Sensor States
 enum BUTTON_STATE { PRESSED = 0, RELEASED = 1 };

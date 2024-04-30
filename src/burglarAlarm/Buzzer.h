@@ -11,7 +11,7 @@ private:
   uint8_t buzzer_pin;
 
 public:
-  ALARM_STATE buzzer_state;
+  BUZZER_STATE buzzer_state;
   float last_buzzed_at;
 
   explicit Buzzer(uint8_t pin);

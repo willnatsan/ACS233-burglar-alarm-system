@@ -3,6 +3,8 @@
 
 #include "Arduino.h"
 
+#define BLINK_DELAY 500
+
 class LED {
 private:
   uint8_t led_pin;
