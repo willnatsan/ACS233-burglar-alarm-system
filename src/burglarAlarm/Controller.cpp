@@ -32,7 +32,10 @@ Controller::Controller(uint8_t door_mag_pin, uint8_t window_mag_pin,
   correct_pin = "1234";
 
   // Set the last armed time to -1
-  last_armed_at = -1;
+  last_triggered_at = -1;
+
+  // Set the number of facial recognition attempts to 0
+  facial_recognition_attempts = 0;
 }
 
 void Controller::setup() {
@@ -55,9 +58,9 @@ void Controller::disarmed_mode(String command) {
   case 'p':;
     if (command.substring(1).equals(this->correct_pin)) {
       this->authorisation_status = true;
-      Serial.write("py"); // "py" means the PIN is correct
+      Serial.write("py");
     } else {
-      Serial.write("pn"); // "pn" means the PIN is incorrect
+      Serial.write("pn");
     }
     break;
 
@@ -65,33 +68,33 @@ void Controller::disarmed_mode(String command) {
   case 's':
     switch (command.charAt(1)) {
     case 'd':
-      change_mode(SYSTEM_MODE::DISARMED);
+      this->change_mode(SYSTEM_MODE::DISARMED);
       break;
     case 'h':
-      change_mode(SYSTEM_MODE::HOME);
+      this->change_mode(SYSTEM_MODE::HOME);
       break;
     case 'a':
-      change_mode(SYSTEM_MODE::AWAY);
+      this->change_mode(SYSTEM_MODE::AWAY);
       break;
     }
     break;
 
   // If the command is 'r', the user is trying to run a test of the system
   case 'r':
-    if (input_test() && output_test()) {
-      Serial.write("ry"); // "ry" means the test was successful
+    if (this->input_test() && this->output_test()) {
+      Serial.write("ry");
     } else {
-      Serial.write("rn"); // "rn" means the test was unsuccessful
+      Serial.write("rn");
     }
     break;
 
   // If the command is 'c', the user is trying to change the PIN
   case 'c':
     if (command.substring(1).length() != 4 || !command.substring(1).toInt()) {
-      Serial.write("cn"); // "cn" means the new PIN is invalid
+      Serial.write("cn");
     } else {
       this->correct_pin = command.substring(1);
-      Serial.write("cy"); // "cy" means the new PIN is valid
+      Serial.write("cy");
     }
     break;
   }
@@ -103,27 +106,47 @@ void Controller::home_mode(String command) {
   system_mode_leds[2]->off();
 
   switch (command.charAt(0)) {
-  // If the command is 'p', the user has enetered a PIN
-  case 'p':;
+  // If the command is 'f', the user is undergoing facial recognition
+  case 'f':
+    facial_recognition_attempts++;
+    switch (command.charAt(1)) {
+    case 'y':
+      solenoid->unlock();
+      solenoid->last_unlocked_at = millis();
+      solenoid_led->blink();
+      Serial.write("fy");
+      break;
+    case 'n':
+      if (facial_recognition_attempts >= 3) {
+        Serial.write("fn");
+        facial_recognition_attempts = 0; // Reset the number of attempts
+      }
+      break;
+    }
+
+  // If the command is 'p', the user has entered a PIN to disarm the system
+  case 'p':
     if (command.substring(1).equals(this->correct_pin)) {
       this->authorisation_status = true;
-      Serial.write("py"); // "py" means the PIN is correct
+      this->last_triggered_at = -1;
+      Serial.write("py");
     } else {
-      Serial.write("pn"); // "pn" means the PIN is incorrect
+      Serial.write("pn");
     }
     break;
 
   // if the command is 'd', the user is trying to disarm the system
   case 'd':
     if (this->authorisation_status) {
-      change_mode(SYSTEM_MODE::DISARMED);
-      alarm_off();
-      Serial.write("dy"); // "dy" means the disarming was successful
+      this->change_mode(SYSTEM_MODE::DISARMED);
+      Serial.write("dy");
     } else {
-      Serial.write("dn"); // "dn" means the disarming was unsuccessful
+      Serial.write("dn");
     }
     break;
   }
+
+  this->check_timeouts();
 }
 
 void Controller::away_mode(String command) {}
@@ -133,3 +156,29 @@ void Controller::magnetic_sensor_isr() {}
 void Controller::pir_sensor_isr() {}
 
 void Controller::button_isr() {}
+
+void Controller::check_timeouts() {
+  // Check if the solenoid has been unlocked for more than the allocated time
+  if (solenoid->solenoid_state == SOLENOID_STATE::UNLOCKED &&
+      millis() - solenoid->last_unlocked_at >= DOOR_UNLOCK_TIMEOUT) {
+    solenoid->lock();
+    solenoid_led->off();
+    solenoid->last_unlocked_at = -1;
+  }
+
+  // Check if the user has been authorised within the allocated time
+  if (!this->authorisation_status &&
+      millis() - last_triggered_at >= PIN_ENTRY_TIMEOUT) {
+    this->alarm_on();
+    buzzer_led->blink();
+    buzzer->last_buzzed_at = millis();
+  }
+
+  // Check if the alarm has been activated for more than the allocated time
+  if (buzzer->buzzer_state == BUZZER_STATE::ON &&
+      millis() - buzzer->last_buzzed_at >= ALARM_TIMEOUT) {
+    this->alarm_off();
+    buzzer_led->off();
+    buzzer->last_buzzed_at = -1;
+  }
+}

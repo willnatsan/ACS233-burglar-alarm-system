@@ -37,9 +37,8 @@ private:
   LED *buzzer_led;
   LED *system_mode_leds[3];
 
-  // Time at which the system was last armed
-  int64_t last_armed_at;
-
+  int64_t last_triggered_at;
+  uint8_t facial_recognition_attempts;
   bool authorisation_status;
   String correct_pin;
 
@@ -60,8 +59,8 @@ private:
   void handle_unauthorised_entry(UNAUTHORISED_ENTRY_TYPE type);
   void handle_authorised_entry();
 
-  void check_status();
-  void change_settings();
+  bool check_status();
+  void check_timeouts();
 
   bool input_test();
   bool output_test();
