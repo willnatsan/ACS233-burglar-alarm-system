@@ -10,7 +10,7 @@ private:
 
 public:
   SOLENOID_STATE solenoid_state;
-  float last_unlocked_at;
+  int64_t last_unlocked_at;
 
   explicit Solenoid(uint8_t pin);
   void lock();

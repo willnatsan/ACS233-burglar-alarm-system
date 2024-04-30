@@ -13,7 +13,7 @@ private:
 
 public:
   BUZZER_STATE buzzer_state;
-  float last_buzzed_at;
+  int64_t last_buzzed_at;
 
   explicit Buzzer(uint8_t pin);
   void on();

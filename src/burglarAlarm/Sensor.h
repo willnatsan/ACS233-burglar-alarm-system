@@ -7,6 +7,7 @@
 class Sensor {
 protected:
   uint8_t sensor_pin;
+
   void (*ISRFunction)();
 
 public:
