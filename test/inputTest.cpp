@@ -1,3 +1,6 @@
+#include <Arduino.h>
+#include <ArduinoSTL.h>
+
 int64_t debounceDuration = 50;
 
 int button = 21;
@@ -22,23 +25,23 @@ void setup() {
 }
 
 void loop() {
-  if (millis()-lastButtonChange >= debounceDuration){
+  if (millis() - lastButtonChange >= debounceDuration) {
     buttonState = digitalRead(button);
-    if (buttonState != lastButtonState){
+    if (buttonState != lastButtonState) {
       lastButtonChange = millis();
       lastButtonState = buttonState;
-      if (buttonState == LOW){
+      if (buttonState == LOW) {
         Serial.println("Button Pressed!");
       }
     }
   }
 
-  if (millis()-lastMagneticSensorChange >= debounceDuration){
+  if (millis() - lastMagneticSensorChange >= debounceDuration) {
     magneticSensorState = digitalRead(magneticSensor);
-    if (magneticSensorState != lastMagneticSensorState){
+    if (magneticSensorState != lastMagneticSensorState) {
       lastMagneticSensorState = magneticSensorState;
       lastMagneticSensorChange = millis();
-      if (magneticSensorState == HIGH){
+      if (magneticSensorState == HIGH) {
         Serial.println("Door/Window Opened!");
       }
     }
@@ -46,10 +49,9 @@ void loop() {
 
   pirSensorState = digitalRead(pirSensor);
 
-  if (pirSensorState == HIGH){
+  if (pirSensorState == HIGH) {
     Serial.println("Motion Detected!");
-  }
-  else{
+  } else {
     Serial.println("No Motion");
   }
 }

@@ -1,4 +1,6 @@
 #include "Controller.h"
+#include <Arduino.h>
+#include <ArduinoSTL.h>
 
 uint8_t SOLENOID_PIN = 13;
 uint8_t BUZZER_PIN = 12;

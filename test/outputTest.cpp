@@ -1,3 +1,6 @@
+#include <Arduino.h>
+#include <ArduinoSTL.h>
+
 int red_led = 4;
 int yellow_led = 3;
 int green_led = 2;
@@ -6,7 +9,7 @@ int buzzer = 12;
 
 void setup() {
   // put your setup code here, to run once
-  
+
   pinMode(red_led, OUTPUT);
   pinMode(yellow_led, OUTPUT);
   pinMode(green_led, OUTPUT);
@@ -16,7 +19,6 @@ void setup() {
   tone(buzzer, 500);
   delay(1000);
   noTone(buzzer);
-  
 }
 
 void loop() {
@@ -43,5 +45,4 @@ void loop() {
   delay(1000);
   digitalWrite(solenoid, LOW);
   delay(1000);
-  
 }
