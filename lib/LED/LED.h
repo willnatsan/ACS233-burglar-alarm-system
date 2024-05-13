@@ -10,8 +10,6 @@ private:
   uint8_t led_pin;
 
 public:
-  uint64_t last_blink;
-
   explicit LED(uint8_t pin);
   void on();
   void off();

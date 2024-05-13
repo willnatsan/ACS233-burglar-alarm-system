@@ -38,11 +38,11 @@ void loop() {
   delay(1000);
 
   digitalWrite(solenoid, HIGH);
-  delay(1000);
+  delay(100);
   digitalWrite(solenoid, LOW);
-  delay(1000);
+  delay(100);
   digitalWrite(solenoid, HIGH);
-  delay(1000);
+  delay(100);
   digitalWrite(solenoid, LOW);
-  delay(1000);
+  delay(100);
 }

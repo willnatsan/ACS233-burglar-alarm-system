@@ -129,8 +129,6 @@ void Controller::home_mode(String command) {
     switch (command.charAt(1)) {
     case 'y':
       solenoid->unlock();
-      solenoid_led->on();
-      solenoid_led->last_blink = millis();
       solenoid_led->blink();
       facial_recognition_attempts = 0; // Reset the number of attempts
       Serial.println("fy");
@@ -230,8 +228,6 @@ void Controller::away_mode(String command) {
     switch (command.charAt(1)) {
     case 'y':
       solenoid->unlock();
-      solenoid_led->on();
-      solenoid_led->last_blink = millis();
       solenoid_led->blink();
       Serial.println("fy");
       break;
@@ -338,8 +334,6 @@ void Controller::button_isr() {
     button->button_state = (BUTTON_STATE)button->read();
 
     solenoid->unlock();
-    solenoid_led->on();
-    solenoid_led->last_blink = millis();
     solenoid_led->blink();
     solenoid->last_unlocked_at = millis();
   }
@@ -352,8 +346,6 @@ void Controller::check_timeouts() {
   if (!this->authorisation_status &&
       millis() - last_triggered_at >= PIN_ENTRY_TIMEOUT) {
     buzzer->on();
-    buzzer_led->on();
-    buzzer_led->last_blink = millis();
     buzzer_led->blink();
     buzzer->last_buzzed_at = millis();
   }
@@ -394,7 +386,7 @@ bool Controller::input_test() {
 bool Controller::output_test() {
   solenoid_led->on();
   solenoid->unlock();
-  delay(500);
+  delay(200);
   solenoid_led->off();
   solenoid->lock();
 
@@ -403,12 +395,7 @@ bool Controller::output_test() {
   buzzer_led->off();
 
   for (int i = 0; i < 3; i++) {
-    system_mode_leds[i]->on();
-    delay(100);
-  }
-
-  for (int i = 0; i < 3; i++) {
-    system_mode_leds[i]->off();
+    system_mode_leds[i]->blink();
     delay(100);
   }
 

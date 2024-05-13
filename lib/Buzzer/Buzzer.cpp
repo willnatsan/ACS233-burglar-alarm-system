@@ -18,11 +18,8 @@ void Buzzer::off() {
 }
 
 void Buzzer::beep() {
-  if (this->buzzer_state) {
-    off();
-    delay(BUZZER_DELAY);
-  } else {
-    on();
-    delay(BUZZER_DELAY);
-  }
+  this->on();
+  delay(BUZZER_DELAY);
+  this->off();
+  delay(BUZZER_DELAY);
 }
