@@ -375,12 +375,15 @@ bool Controller::input_test() {
 }
 
 bool Controller::output_test() {
-  solenoid->unlock();
   solenoid_led->on();
+  solenoid->unlock();
+  delay(500);
+  solenoid_led->off();
   solenoid->lock();
 
-  buzzer->beep();
   buzzer_led->on();
+  buzzer->beep();
+  buzzer_led->off();
 
   for (int i = 0; i < 3; i++) {
     system_mode_leds[i]->on();
@@ -391,9 +394,6 @@ bool Controller::output_test() {
     system_mode_leds[i]->off();
     delay(100);
   }
-
-  solenoid_led->off();
-  buzzer_led->off();
 
   return true;
 }
