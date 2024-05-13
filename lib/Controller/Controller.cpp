@@ -125,6 +125,8 @@ void Controller::home_mode(String command) {
     switch (command.charAt(1)) {
     case 'y':
       solenoid->unlock();
+      solenoid_led->on();
+      solenoid_led->last_blink = millis();
       solenoid_led->blink();
       Serial.println("fy");
       break;
@@ -216,6 +218,8 @@ void Controller::away_mode(String command) {
     switch (command.charAt(1)) {
     case 'y':
       solenoid->unlock();
+      solenoid_led->on();
+      solenoid_led->last_blink = millis();
       solenoid_led->blink();
       Serial.println("fy");
       break;
@@ -254,7 +258,7 @@ void Controller::away_mode(String command) {
 }
 
 bool Controller::check_status() {
-  String message = "st";
+  String message = "x";
   message += door->mag_state;
   message += window->mag_state;
   message += pir->pir_state;
@@ -317,6 +321,8 @@ void Controller::button_isr() {
     button->button_state = (BUTTON_STATE)button->read();
 
     solenoid->unlock();
+    solenoid_led->on();
+    solenoid_led->last_blink = millis();
     solenoid_led->blink();
     solenoid->last_unlocked_at = millis();
   }
@@ -329,6 +335,8 @@ void Controller::check_timeouts() {
   if (!this->authorisation_status &&
       millis() - last_triggered_at >= PIN_ENTRY_TIMEOUT) {
     buzzer->on();
+    buzzer_led->on();
+    buzzer_led->last_blink = millis();
     buzzer_led->blink();
     buzzer->last_buzzed_at = millis();
   }
@@ -339,6 +347,19 @@ void Controller::check_timeouts() {
     buzzer->off();
     buzzer_led->off();
     buzzer->last_buzzed_at = -1;
+  } else {
+    buzzer_led->blink();
+  }
+
+  // Check if the solenoid has been unlocked for more than the allocated time
+  if (solenoid->solenoid_state == SOLENOID_STATE::UNLOCKED &&
+      millis() - solenoid->last_unlocked_at >= DOOR_LOCK_TIMEOUT &&
+      door->mag_state == MAGNETIC_SENSOR_STATE::CLOSED) {
+    solenoid->lock();
+    solenoid_led->off();
+    solenoid->last_unlocked_at = -1;
+  } else {
+    solenoid_led->blink();
   }
 }
 
@@ -355,15 +376,24 @@ bool Controller::input_test() {
 
 bool Controller::output_test() {
   solenoid->unlock();
-  solenoid_led->blink();
+  solenoid_led->on();
   solenoid->lock();
 
   buzzer->beep();
-  buzzer_led->blink();
+  buzzer_led->on();
 
   for (int i = 0; i < 3; i++) {
-    system_mode_leds[i]->blink();
+    system_mode_leds[i]->on();
+    delay(100);
   }
+
+  for (int i = 0; i < 3; i++) {
+    system_mode_leds[i]->off();
+    delay(100);
+  }
+
+  solenoid_led->off();
+  buzzer_led->off();
 
   return true;
 }
