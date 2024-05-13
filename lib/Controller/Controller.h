@@ -51,13 +51,12 @@ private:
 
   void change_mode(SYSTEM_MODE mode);
 
-  //   void start_verification();
-  //   void stop_verification();
+  void start_verification();
+  void stop_verification();
 
-  //   void handle_unauthorised_entry(UNAUTHORISED_ENTRY_TYPE type);
-  //   void handle_authorised_entry();
+  void handle_unauthorised_entry(UNAUTHORISED_ENTRY_TYPE type);
+  void handle_authorised_entry();
 
-  bool check_status();
   void check_timeouts();
 
   bool input_test();
@@ -74,6 +73,7 @@ public:
   void disarmed_mode(String command);
   void home_mode(String command);
   void away_mode(String command);
+  bool check_status();
   ~Controller();
 
   static void handle_magnetic_sensor_isr() {

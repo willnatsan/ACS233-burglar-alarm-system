@@ -22,6 +22,7 @@ Controller controller(DOOR_MAG_PIN, WINDOW_MAG_PIN, PIR_SENSOR_PIN, BUTTON_PIN,
                       BUZZER_PIN);
 
 String command;
+uint64_t timestamp = millis();
 
 void setup() {
   Serial.begin(115200);
@@ -54,5 +55,8 @@ void loop() {
     break;
   }
 
-  // CHECK FOR SYSTEM EXIT AND CALL DESTRUCTOR
+  if (millis() - timestamp > 5000) {
+    controller.check_status();
+    timestamp = millis();
+  }
 }

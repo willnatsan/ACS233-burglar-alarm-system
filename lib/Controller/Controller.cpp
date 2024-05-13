@@ -239,6 +239,23 @@ void Controller::away_mode(String command) {
   this->check_timeouts();
 }
 
+bool Controller::check_status() {
+  String message = "st";
+  message += door->mag_state;
+  message += window->mag_state;
+  message += pir->pir_state;
+  message += solenoid->solenoid_state;
+  Serial.write(message.c_str());
+
+  if (door->mag_state == MAGNETIC_SENSOR_STATE::CLOSED &&
+      window->mag_state == MAGNETIC_SENSOR_STATE::CLOSED &&
+      pir->pir_state == PIR_SENSOR_STATE::NO_MOTION &&
+      solenoid->solenoid_state == SOLENOID_STATE::LOCKED) {
+    return true;
+  }
+  return false;
+}
+
 void Controller::magnetic_sensor_isr() {
   if (millis() - door->last_triggered_at >= DEBOUNCE_DURATION) {
     door->last_triggered_at = millis();
@@ -292,21 +309,6 @@ void Controller::button_isr() {
 }
 
 void Controller::change_mode(SYSTEM_MODE mode) { this->current_mode = mode; }
-
-bool Controller::check_status() {
-  String message = "st";
-  message += door->mag_state;
-  message += window->mag_state;
-  message += solenoid->solenoid_state;
-  Serial.write(message.c_str());
-
-  if (door->mag_state == MAGNETIC_SENSOR_STATE::CLOSED ||
-      window->mag_state == MAGNETIC_SENSOR_STATE::CLOSED ||
-      solenoid->solenoid_state == SOLENOID_STATE::LOCKED) {
-    return true;
-  }
-  return false;
-}
 
 void Controller::check_timeouts() {
   // Check if the user has been authorised within the allocated time
