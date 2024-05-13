@@ -29,7 +29,7 @@ Controller::Controller(uint8_t door_mag_pin, uint8_t window_mag_pin,
   system_mode_leds[2] = new LED(away_led_pin);
 
   // Set the system to disarmed mode by default
-  change_mode(DISARMED);
+  this->change_mode(DISARMED);
 
   // Set the system to unauthorised by default
   authorisation_status = false;
@@ -297,7 +297,7 @@ void Controller::magnetic_sensor_isr() {
       solenoid->lock();
       solenoid_led->off();
     } else if (door->mag_state == MAGNETIC_SENSOR_STATE::OPEN) {
-      switch (current_mode) {
+      switch (this->current_mode) {
       case SYSTEM_MODE::AWAY:
       case SYSTEM_MODE::HOME:
         this->last_triggered_at = millis();
@@ -316,7 +316,7 @@ void Controller::pir_sensor_isr() {
 
   if (pir->pir_state == PIR_SENSOR_STATE::MOTION_DETECTED &&
       millis() - pir->last_triggered_at >= MOTION_SENSOR_TIMEOUT) {
-    switch (current_mode) {
+    switch (this->current_mode) {
     case SYSTEM_MODE::AWAY:
       this->last_triggered_at = millis();
       break;
