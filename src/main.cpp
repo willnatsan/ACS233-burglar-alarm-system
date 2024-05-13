@@ -35,10 +35,6 @@ void loop() {
     // Trimming out white spaces and \n ------------------------
     command = Serial.readStringUntil('\n');
     command.trim();
-    if (command.charAt(command.length() - 1) == '\n') {
-      // Remove the last character
-      command = command.substring(0, command.length() - 1);
-    }
   } else {
     command = "";
   }

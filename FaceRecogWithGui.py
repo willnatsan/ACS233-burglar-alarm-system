@@ -210,7 +210,7 @@ def create_pin_popup():
     
     
 # Serial communication =====================================================================================================
-ser = serial.Serial("/dev/ttyACM0", 9600, timeout = 1)
+ser = serial.Serial("/dev/ttyACM0", baudrate=115200, timeout = 1)
 ser.flush()
 
 def received_serial_command(command):
@@ -283,9 +283,8 @@ def check_face(frame):
 while loop:
     # serial
     if ser.in_waiting > 0:
-        line = ser.readline().decode('utf-8').strip()
+        line = ser.readline().decode("utf-8").strip()
         print(line)
-        
         received_serial_command(line)
     
     
