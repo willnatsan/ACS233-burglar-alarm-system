@@ -39,11 +39,11 @@ def runtest():
     ser.write(test.encode('utf-8'))
 
 def delface():
-    folder_path = r'C:\Users\alfre\OneDrive\Documents\Codes\Python\Face\StorredFaces'
+    folder_path = r"/home/willnatsan/uni/acs233-burglar-alarm/pics"
     os.system(f'explorer {folder_path}')
       
 def regface():
-    folder_path = r'C:\Users\alfre\OneDrive\Documents\Codes\Python\Face\StorredFaces'
+    folder_path = r"/home/willnatsan/uni/acs233-burglar-alarm/pics"
     os.system(f'explorer {folder_path}')
       
 def changepin():
@@ -210,7 +210,7 @@ def create_pin_popup():
     
     
 # Serial communication =====================================================================================================
-ser = serial.Serial("com7", 9600, timeout = 1)
+ser = serial.Serial("/dev/ttyACM0", 9600, timeout = 1)
 ser.flush()
 
 def received_serial_command(command):
@@ -247,8 +247,7 @@ counter = 0
 face_match = "f"
 face_detected = False
 
-# refrence_img = cv2.imread("C:/Users/alfre/OneDrive/Documents/Codes/Python/Face/StorredFaces/refrence.jpg")
-folder_path = Path('C:/Users/alfre/OneDrive/Documents/Codes/Python/Face/StorredFaces')
+folder_path = Path("/home/willnatsan/uni/acs233-burglar-alarm/pics")
 
 
 # Face functions
