@@ -64,9 +64,9 @@ void Controller::disarmed_mode(String command) {
   case 'p':;
     if (command.substring(1).equals(this->correct_pin)) {
       this->authorisation_status = true;
-      Serial.write("py");
+      Serial.println("py");
     } else {
-      Serial.write("pn");
+      Serial.println("pn");
     }
     break;
 
@@ -88,19 +88,19 @@ void Controller::disarmed_mode(String command) {
   // If the command is 'r', the user is trying to run a test of the system
   case 'r':
     if (this->input_test() && this->output_test()) {
-      Serial.write("ry");
+      Serial.println("ry");
     } else {
-      Serial.write("rn");
+      Serial.println("rn");
     }
     break;
 
   // If the command is 'c', the user is trying to change the PIN
   case 'c':
     if (command.substring(1).length() != 4 || !command.substring(1).toInt()) {
-      Serial.write("cn");
+      Serial.println("cn");
     } else {
       this->correct_pin = command.substring(1);
-      Serial.write("cy");
+      Serial.println("cy");
     }
     break;
   }
@@ -119,11 +119,11 @@ void Controller::home_mode(String command) {
     case 'y':
       solenoid->unlock();
       solenoid_led->blink();
-      Serial.write("fy");
+      Serial.println("fy");
       break;
     case 'n':
       if (facial_recognition_attempts >= 3) {
-        Serial.write("fn");
+        Serial.println("fn");
         facial_recognition_attempts = 0; // Reset the number of attempts
       }
       break;
@@ -134,9 +134,9 @@ void Controller::home_mode(String command) {
   case 'p':
     if (command.substring(1).equals(this->correct_pin)) {
       this->authorisation_status = true;
-      Serial.write("py");
+      Serial.println("py");
     } else {
-      Serial.write("pn");
+      Serial.println("pn");
     }
     break;
 
@@ -146,9 +146,9 @@ void Controller::home_mode(String command) {
       this->change_mode(SYSTEM_MODE::DISARMED);
       this->authorisation_status = false;
       this->last_triggered_at = -1;
-      Serial.write("dy");
+      Serial.println("dy");
     } else {
-      Serial.write("dn");
+      Serial.println("dn");
     }
     break;
 
@@ -170,19 +170,19 @@ void Controller::home_mode(String command) {
   // If the command is 'r', the user is trying to run a test of the system
   case 'r':
     if (this->input_test() && this->output_test()) {
-      Serial.write("ry");
+      Serial.println("ry");
     } else {
-      Serial.write("rn");
+      Serial.println("rn");
     }
     break;
 
   // If the command is 'c', the user is trying to change the PIN
   case 'c':
     if (command.substring(1).length() != 4 || !command.substring(1).toInt()) {
-      Serial.write("cn");
+      Serial.println("cn");
     } else {
       this->correct_pin = command.substring(1);
-      Serial.write("cy");
+      Serial.println("cy");
     }
     break;
   }
@@ -203,11 +203,11 @@ void Controller::away_mode(String command) {
     case 'y':
       solenoid->unlock();
       solenoid_led->blink();
-      Serial.write("fy");
+      Serial.println("fy");
       break;
     case 'n':
       if (facial_recognition_attempts >= 3) {
-        Serial.write("fn");
+        Serial.println("fn");
         facial_recognition_attempts = 0; // Reset the number of attempts
       }
       break;
@@ -217,9 +217,9 @@ void Controller::away_mode(String command) {
   case 'p':
     if (command.substring(1).equals(this->correct_pin)) {
       this->authorisation_status = true;
-      Serial.write("py");
+      Serial.println("py");
     } else {
-      Serial.write("pn");
+      Serial.println("pn");
     }
     break;
 
@@ -229,9 +229,9 @@ void Controller::away_mode(String command) {
       this->change_mode(SYSTEM_MODE::DISARMED);
       this->authorisation_status = false;
       this->last_triggered_at = -1;
-      Serial.write("dy");
+      Serial.println("dy");
     } else {
-      Serial.write("dn");
+      Serial.println("dn");
     }
     break;
   }
@@ -245,7 +245,7 @@ bool Controller::check_status() {
   message += window->mag_state;
   message += pir->pir_state;
   message += solenoid->solenoid_state;
-  Serial.write(message.c_str());
+  Serial.println(message.c_str());
 
   if (door->mag_state == MAGNETIC_SENSOR_STATE::CLOSED &&
       window->mag_state == MAGNETIC_SENSOR_STATE::CLOSED &&
@@ -334,7 +334,7 @@ bool Controller::input_test() {
   message += window->read();
   message += pir->read();
   message += button->read();
-  Serial.write(message.c_str());
+  Serial.println(message.c_str());
 
   return true;
 }
