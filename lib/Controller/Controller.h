@@ -52,11 +52,11 @@ private:
 
   void change_mode(SYSTEM_MODE mode);
 
-  void start_verification();
-  void stop_verification();
+  // void start_verification();
+  // void stop_verification();
 
-  void handle_unauthorised_entry(UNAUTHORISED_ENTRY_TYPE type);
-  void handle_authorised_entry();
+  // void handle_unauthorised_entry(UNAUTHORISED_ENTRY_TYPE type);
+  // void handle_authorised_entry();
 
   void check_timeouts();
 
