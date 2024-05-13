@@ -30,9 +30,9 @@ def shutdown():
     global loop
     loop = False
       
-def dissarm():
-    diss = "d\n"
-    ser.write(diss.encode('utf-8'))
+def disarm():
+    dis = "d\n"
+    ser.write(dis.encode('utf-8'))
       
 def runtest():
     test = "r\n"
@@ -50,7 +50,7 @@ def changepin():
     newpin = "r" + ChangePinEntry.get() + "\n"
     ser.write(newpin.encode('utf-8'))
 
-def dissarmedstate():
+def disarmedstate():
     state = "sd\n"
     ser.write(state.encode('utf-8'))
 
@@ -160,8 +160,8 @@ ExitButton = tk.Button(SettingPage, text = "Exit", font = ('Consolas', 18), widt
 ExitButton.grid(row = 31, column = 54, columnspan = 7, rowspan = 4, sticky = "NSEW")
 ShutDownButton = tk.Button(SettingPage, text = "Shutdown", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', command = shutdown, bg = '#e6695b')
 ShutDownButton.grid(row = 31, column = 44, columnspan = 7, rowspan = 4, sticky = "NSEW")
-DissarmButton = tk.Button(SettingPage, text = "Disarm", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', command = dissarm, bg = '#e6695b')
-DissarmButton.grid(row = 31, column = 34, columnspan = 7, rowspan = 4, sticky = "NSEW")
+DisarmButton = tk.Button(SettingPage, text = "Disarm", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', command = disarm, bg = '#e6695b')
+DisarmButton.grid(row = 31, column = 34, columnspan = 7, rowspan = 4, sticky = "NSEW")
 RunTestButton = tk.Button(SettingPage, text = "Run Test", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', command = runtest, bg = '#668db2')
 RunTestButton.grid(row = 31, column = 3, columnspan = 7, rowspan = 4, sticky = "NSEW")
 DeleteFaceButton = tk.Button(SettingPage, text = "Delete", font = ('Consolas', 16), width = 1, height = 1, fg = '#000000', command = delface, bg = '#668db2')
@@ -170,8 +170,8 @@ RegisterFaceButton = tk.Button(SettingPage, text = "Register", font = ('Consolas
 RegisterFaceButton.grid(row = 10, column = 36, columnspan = 8, rowspan = 2, sticky = "NSEW")
 ChangePinButton = tk.Button(SettingPage, text = "Change", font = ('Consolas', 16), width = 1, height = 1, fg = '#000000', command = changepin, bg = '#668db2')
 ChangePinButton.grid(row = 13, column = 20, columnspan = 8, rowspan = 2, sticky = "NSEW")
-DissarmedStateButton = tk.Button(SettingPage, text = "Disarmed", font = ('Consolas', 16), width = 1, height = 1, fg = '#000000', command = dissarmedstate, bg = '#668db2')
-DissarmedStateButton.grid(row = 10, column = 4, columnspan = 8, rowspan = 2, sticky = "NSEW")
+DisarmedStateButton = tk.Button(SettingPage, text = "Disarmed", font = ('Consolas', 16), width = 1, height = 1, fg = '#000000', command = disarmedstate, bg = '#668db2')
+DisarmedStateButton.grid(row = 10, column = 4, columnspan = 8, rowspan = 2, sticky = "NSEW")
 HomeStateButton = tk.Button(SettingPage, text = "Home ", font = ('Consolas', 16), width = 1, height = 1, fg = '#000000', command = homestate, bg = '#668db2')
 HomeStateButton.grid(row = 13, column = 4, columnspan = 8, rowspan = 2, sticky = "NSEW")
 AwayStateButton = tk.Button(SettingPage, text = "Away", font = ('Consolas', 16), width = 1, height = 1, fg = '#000000', command = awaystate, bg = '#668db2')
