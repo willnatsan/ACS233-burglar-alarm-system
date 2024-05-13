@@ -4,6 +4,8 @@ import cv2
 from deepface import DeepFace
 import tkinter as tk
 from tkinter import messagebox
+from pathlib import Path
+import os
 
 
 # Global variables =========================================================================================================
@@ -37,10 +39,12 @@ def runtest():
     ser.write(test.encode('utf-8'))
 
 def delface():
-    pass
+    folder_path = r'C:\Users\alfre\OneDrive\Documents\Codes\Python\Face\StorredFaces'
+    os.system(f'explorer {folder_path}')
       
 def regface():
-    pass
+    folder_path = r'C:\Users\alfre\OneDrive\Documents\Codes\Python\Face\StorredFaces'
+    os.system(f'explorer {folder_path}')
       
 def changepin():
     newpin = "r" + ChangePinEntry.get() + "\n"
@@ -243,7 +247,8 @@ counter = 0
 face_match = "f"
 face_detected = False
 
-refrence_img = cv2.imread("C:/Users/alfre/OneDrive/Documents/Codes/Python/Face/refrence.jpg")
+# refrence_img = cv2.imread("C:/Users/alfre/OneDrive/Documents/Codes/Python/Face/StorredFaces/refrence.jpg")
+folder_path = Path('C:/Users/alfre/OneDrive/Documents/Codes/Python/Face/StorredFaces')
 
 
 # Face functions
@@ -258,15 +263,19 @@ def detect_faces(frame):
     return len(faces) > 0
 
 def check_face(frame):
+    global face_match
     if face_detected:
-        global face_match
         try:
-            if DeepFace.verify(frame, refrence_img.copy())['verified']:
-                face_match = "y"
+            for file_path in folder_path.iterdir():
+                if file_path.is_file():
+                    refrence_img = cv2.imread(file_path)
+                    if DeepFace.verify(frame, refrence_img.copy())['verified']:
+                        face_match = "y"
+                        break
             else:
                 face_match = "n"
         except ValueError:
-            face_match = "n"
+            face_match = "f"
     else:
         face_match = "f"
         
