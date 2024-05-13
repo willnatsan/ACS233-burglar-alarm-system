@@ -1,7 +1,8 @@
 #ifndef ACS233_CONTROLLER
 #define ACS233_CONTROLLER
 
-#include "Arduino.h"
+#include <Arduino.h>
+
 #include "Buzzer.h"
 #include "DisplayInterface.h"
 #include "ENUMS.h"
@@ -64,18 +65,17 @@ private:
   bool output_test();
 
 public:
-  static SYSTEM_MODE current_mode;
+  SYSTEM_MODE current_mode;
 
-  explicit Controller(uint8_t door_mag_pin, uint8_t window_mag_pin,
-                      uint8_t pir_pin, uint8_t button_pin,
-                      uint8_t disarmed_led_pin, uint8_t home_led_pin,
-                      uint8_t away_led_pin, uint8_t solenoid_led_pin,
-                      uint8_t buzzer_led_pin, uint8_t solenoid_pin,
-                      uint8_t buzzer_pin);
+  Controller(uint8_t door_mag_pin, uint8_t window_mag_pin, uint8_t pir_pin,
+             uint8_t button_pin, uint8_t disarmed_led_pin, uint8_t home_led_pin,
+             uint8_t away_led_pin, uint8_t solenoid_led_pin,
+             uint8_t buzzer_led_pin, uint8_t solenoid_pin, uint8_t buzzer_pin);
   void setup();
   void disarmed_mode(String command);
   void home_mode(String command);
   void away_mode(String command);
+  ~Controller();
 
   static void handle_magnetic_sensor_isr() {
     controller_handler->magnetic_sensor_isr();

@@ -1,11 +1,17 @@
 #include "Controller.h"
 
+Controller *Controller::controller_handler = nullptr;
+
 Controller::Controller(uint8_t door_mag_pin, uint8_t window_mag_pin,
                        uint8_t pir_pin, uint8_t button_pin,
                        uint8_t disarmed_led_pin, uint8_t home_led_pin,
                        uint8_t away_led_pin, uint8_t solenoid_led_pin,
                        uint8_t buzzer_led_pin, uint8_t solenoid_pin,
                        uint8_t buzzer_pin) {
+
+  // Set the static pointer to the current object
+  controller_handler = this;
+
   // Initialise sensors
   door = new MagneticSensor(door_mag_pin, handle_magnetic_sensor_isr);
   window = new MagneticSensor(window_mag_pin, handle_magnetic_sensor_isr);
@@ -344,4 +350,20 @@ bool Controller::output_test() {
   }
 
   return true;
+}
+
+Controller::~Controller() {
+  delete door;
+  delete window;
+  delete pir;
+  delete button;
+
+  delete buzzer;
+  delete solenoid;
+
+  delete solenoid_led;
+  delete buzzer_led;
+  for (int i = 0; i < 3; i++) {
+    delete system_mode_leds[i];
+  }
 }

@@ -53,4 +53,6 @@ void loop() {
     controller.away_mode(command);
     break;
   }
+
+  // CHECK FOR SYSTEM EXIT AND CALL DESTRUCTOR
 }
