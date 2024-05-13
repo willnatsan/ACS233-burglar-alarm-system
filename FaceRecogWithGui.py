@@ -39,11 +39,11 @@ def runtest():
     ser.write(test.encode('utf-8'))
 
 def delface():
-    folder_path = r"/home/willnatsan/uni/acs233-burglar-alarm/pics"
+    folder_path = r"/home/willnatsan/Pictures/Webcam/"
     os.system(f'explorer {folder_path}')
       
 def regface():
-    folder_path = r"/home/willnatsan/uni/acs233-burglar-alarm/pics"
+    folder_path = r"/home/willnatsan/Pictures/Webcam/"
     os.system(f'explorer {folder_path}')
       
 def changepin():
@@ -149,7 +149,7 @@ pir_state = tk.Label(SettingPage, text = "PIR State", font = ('Consolas', 18), w
 pir_state.grid(row = 23, column = 20, columnspan = 8, rowspan = 3, sticky = "NSEW")
 mag_state = tk.Label(SettingPage, text = "Mag State", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', bg = '#00FFC7')
 mag_state.grid(row = 23, column = 36, columnspan = 8, rowspan = 3, sticky = "NSEW")
-sol_state = tk.Label(SettingPage, text = "Solenoid State", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', bg = '#00FFC7')
+sol_state = tk.Label(SettingPage, text = "Lock State", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', bg = '#00FFC7')
 sol_state.grid(row = 23, column = 52, columnspan = 8, rowspan = 3, sticky = "NSEW")
 
 ChangePinEntry = tk.Entry(SettingPage, width = 1, bg = '#FFFFFF', font = ('Consolas', 16), justify = 'center')
@@ -180,34 +180,6 @@ AwayStateButton.grid(row = 16, column = 4, columnspan = 8, rowspan = 2, sticky =
 
 # Hide the second window initially
 SettingPage.withdraw()
-
-
-# Poppup tkinter window
-def create_pin_popup():
-    # Create a new Tkinter window for the PIN popup
-    pin_window = tk.Toplevel()
-    pin_window.title("Enter PIN")
-
-    # Function to validate the entered PIN
-    def validate_pin():
-        entered_pin = pin_entry.get()
-        if entered_pin == "1234":  # Replace "1234" with your desired PIN
-            print("PIN entered successfully!")
-            pin_window.destroy()  # Close the PIN popup window
-        else:
-            print("Incorrect PIN!")
-    
-    # Label and entry widget for entering the PIN
-    pin_label = tk.Label(pin_window, text="Enter PIN:")
-    pin_label.pack()
-
-    pin_entry = tk.Entry(pin_window, show="*")  # Use "*" to hide the PIN characters
-    pin_entry.pack()
-
-    # Button to submit the PIN
-    submit_button = tk.Button(pin_window, text="Submit", command=validate_pin)
-    submit_button.pack()
-    
     
 # Serial communication =====================================================================================================
 ser = serial.Serial("/dev/ttyACM0", baudrate=115200, timeout = 1)
@@ -237,7 +209,7 @@ def received_serial_command(command):
 # Load the pre-trained face detection model
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
-cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+cap = cv2.VideoCapture(0)
 
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
@@ -247,7 +219,7 @@ counter = 0
 face_match = "f"
 face_detected = False
 
-folder_path = Path("/home/willnatsan/uni/acs233-burglar-alarm/pics")
+folder_path = Path("/home/willnatsan/Pictures/Webcam/")
 
 
 # Face functions
@@ -267,7 +239,7 @@ def check_face(frame):
         try:
             for file_path in folder_path.iterdir():
                 if file_path.is_file():
-                    refrence_img = cv2.imread(file_path)
+                    refrence_img = cv2.imread(str(file_path))
                     if DeepFace.verify(frame, refrence_img.copy())['verified']:
                         face_match = "y"
                         break
@@ -317,7 +289,6 @@ while loop:
             cv2.putText(frame, "NO Face!", (20, 450), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), 3)
 
         cv2.imshow("video", frame)
-        
         
     # Break out of while loop when 'q' is pressed
     key = cv2.waitKey(1)
