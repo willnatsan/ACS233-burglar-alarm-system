@@ -9,6 +9,10 @@ from tkinter import messagebox
 # Global variables =========================================================================================================
 loop = True
 
+p_state = 0;
+s_state = 0;
+m_state = 0;
+
 
 # Tkinter code =============================================================================================================
 # Button functions for PinPage
@@ -63,6 +67,24 @@ def close_SettingPage():
     SettingPage.withdraw()  # Hide the second window
     PinPage.deiconify()  # Show the first window
     PinEntry.delete(0, 'end')  # Clear the password entry field
+    
+def display_state():
+    if p_state:
+        pir_state.config(bg="#e6695b")
+    else:
+        pir_state.config(bg="#00FFC7")
+        
+    if m_state:
+        mag_state.config(bg="#e6695b")
+    else:
+        mag_state.config(bg="#00FFC7")
+        
+    if s_state:
+        sol_state.config(bg="#e6695b")
+    else:
+        sol_state.config(bg="#00FFC7")
+    
+    
 
 # PinPage window
 PinPage = tk.Tk()
@@ -113,6 +135,18 @@ RegFaceLabel = tk.Label(SettingPage, text = "Register Face:", font = ('Consolas'
 RegFaceLabel.grid(row = 5, column = 35, columnspan = 10, rowspan = 3, sticky = "NSEW")
 DelFaceLabel = tk.Label(SettingPage, text = "Delete Face:", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', bg = '#3a5a78')
 DelFaceLabel.grid(row = 5, column = 51, columnspan = 10, rowspan = 3, sticky = "NSEW")
+split_1 = tk.Label(SettingPage, text = "", font = ('Arial', 16), width = 1, height = 1, fg = '#000000', bg = '#3a5a78')
+split_1.grid(row = 19, column = 0, columnspan = 64, rowspan = 2, sticky = "NSEW")
+split_2 = tk.Label(SettingPage, text = "", font = ('Arial', 16), width = 1, height = 1, fg = '#000000', bg = '#3a5a78')
+split_2.grid(row = 28, column = 0, columnspan = 64, rowspan = 2, sticky = "NSEW")
+sensor_state = tk.Label(SettingPage, text = "State:", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', bg = '#3a5a78')
+sensor_state.grid(row = 23, column = 4, columnspan = 8, rowspan = 3, sticky = "NSEW")
+pir_state = tk.Label(SettingPage, text = "PIR State", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', bg = '#00FFC7')
+pir_state.grid(row = 23, column = 20, columnspan = 8, rowspan = 3, sticky = "NSEW")
+mag_state = tk.Label(SettingPage, text = "Mag State", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', bg = '#00FFC7')
+mag_state.grid(row = 23, column = 36, columnspan = 8, rowspan = 3, sticky = "NSEW")
+sol_state = tk.Label(SettingPage, text = "Solenoid State", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', bg = '#00FFC7')
+sol_state.grid(row = 23, column = 52, columnspan = 8, rowspan = 3, sticky = "NSEW")
 
 ChangePinEntry = tk.Entry(SettingPage, width = 1, bg = '#FFFFFF', font = ('Consolas', 16), justify = 'center')
 ChangePinEntry.grid(row = 10, column = 20, columnspan = 8, rowspan = 2, sticky = "NSEW")
@@ -122,7 +156,7 @@ ExitButton = tk.Button(SettingPage, text = "Exit", font = ('Consolas', 18), widt
 ExitButton.grid(row = 31, column = 54, columnspan = 7, rowspan = 4, sticky = "NSEW")
 ShutDownButton = tk.Button(SettingPage, text = "Shutdown", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', command = shutdown, bg = '#e6695b')
 ShutDownButton.grid(row = 31, column = 44, columnspan = 7, rowspan = 4, sticky = "NSEW")
-DissarmButton = tk.Button(SettingPage, text = "Dissarm", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', command = dissarm, bg = '#e6695b')
+DissarmButton = tk.Button(SettingPage, text = "Disarm", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', command = dissarm, bg = '#e6695b')
 DissarmButton.grid(row = 31, column = 34, columnspan = 7, rowspan = 4, sticky = "NSEW")
 RunTestButton = tk.Button(SettingPage, text = "Run Test", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', command = runtest, bg = '#668db2')
 RunTestButton.grid(row = 31, column = 3, columnspan = 7, rowspan = 4, sticky = "NSEW")
@@ -132,7 +166,7 @@ RegisterFaceButton = tk.Button(SettingPage, text = "Register", font = ('Consolas
 RegisterFaceButton.grid(row = 10, column = 36, columnspan = 8, rowspan = 2, sticky = "NSEW")
 ChangePinButton = tk.Button(SettingPage, text = "Change", font = ('Consolas', 16), width = 1, height = 1, fg = '#000000', command = changepin, bg = '#668db2')
 ChangePinButton.grid(row = 13, column = 20, columnspan = 8, rowspan = 2, sticky = "NSEW")
-DissarmedStateButton = tk.Button(SettingPage, text = "Dissarmed", font = ('Consolas', 16), width = 1, height = 1, fg = '#000000', command = dissarmedstate, bg = '#668db2')
+DissarmedStateButton = tk.Button(SettingPage, text = "Disarmed", font = ('Consolas', 16), width = 1, height = 1, fg = '#000000', command = dissarmedstate, bg = '#668db2')
 DissarmedStateButton.grid(row = 10, column = 4, columnspan = 8, rowspan = 2, sticky = "NSEW")
 HomeStateButton = tk.Button(SettingPage, text = "Home ", font = ('Consolas', 16), width = 1, height = 1, fg = '#000000', command = homestate, bg = '#668db2')
 HomeStateButton.grid(row = 13, column = 4, columnspan = 8, rowspan = 2, sticky = "NSEW")
@@ -172,7 +206,7 @@ def create_pin_popup():
     
     
 # Serial communication =====================================================================================================
-ser = serial.Serial("/dev/ttyACM0", 9600, timeout = 1)
+ser = serial.Serial("com7", 9600, timeout = 1)
 ser.flush()
 
 def received_serial_command(command):
@@ -185,6 +219,14 @@ def received_serial_command(command):
     if command[0] == 'f':
         face = "f" + face_match + "\n"
         ser.write(face.encode('utf-8'))
+        
+    if command[0] == 'x':
+        m_state = int(command[1])
+        # m_state = int(command[2])
+        p_state = int(command[3])
+        s_state = int(command[4])
+        display_state()
+        
 
     
 # Facial recognition code ==================================================================================================
@@ -201,7 +243,7 @@ counter = 0
 face_match = "f"
 face_detected = False
 
-refrence_img = cv2.imread("/home/willnatsan/uni/acs233-burglar-alarm/pics/Miki.jpg") 
+refrence_img = cv2.imread("C:/Users/alfre/OneDrive/Documents/Codes/Python/Face/refrence.jpg")
 
 
 # Face functions
