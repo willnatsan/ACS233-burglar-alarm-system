@@ -132,12 +132,13 @@ void Controller::home_mode(String command) {
       solenoid_led->on();
       solenoid_led->last_blink = millis();
       solenoid_led->blink();
+      facial_recognition_attempts = 0; // Reset the number of attempts
       Serial.println("fy");
       break;
     case 'n':
       if (facial_recognition_attempts >= 3) {
-        Serial.println("fn");
         facial_recognition_attempts = 0; // Reset the number of attempts
+        Serial.println("fn");
       }
       break;
     case 'f':
