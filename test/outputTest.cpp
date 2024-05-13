@@ -4,7 +4,7 @@
 int red_led = 4;
 int yellow_led = 3;
 int green_led = 2;
-int solenoid = 13;
+int solenoid = 11;
 int buzzer = 12;
 
 void setup() {

@@ -2,7 +2,7 @@
 #include <Arduino.h>
 #include <ArduinoSTL.h>
 
-uint8_t SOLENOID_PIN = 13;
+uint8_t SOLENOID_PIN = 11;
 uint8_t BUZZER_PIN = 12;
 
 uint8_t SOLENOID_LED_PIN = 6;
