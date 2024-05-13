@@ -89,6 +89,8 @@ void Controller::disarmed_mode(String command) {
     case 'a':
       this->change_mode(SYSTEM_MODE::AWAY);
       break;
+    default:
+      break;
     }
     break;
 
@@ -109,6 +111,8 @@ void Controller::disarmed_mode(String command) {
       this->correct_pin = command.substring(1);
       Serial.println("cy");
     }
+    break;
+  default:
     break;
   }
 }
@@ -135,6 +139,9 @@ void Controller::home_mode(String command) {
         Serial.println("fn");
         facial_recognition_attempts = 0; // Reset the number of attempts
       }
+      break;
+    case 'f':
+    default:
       break;
     }
 
@@ -180,6 +187,8 @@ void Controller::home_mode(String command) {
     case 'a':
       this->change_mode(SYSTEM_MODE::AWAY);
       break;
+    default:
+      break;
     }
     break;
 
@@ -200,6 +209,8 @@ void Controller::home_mode(String command) {
       this->correct_pin = command.substring(1);
       Serial.println("cy");
     }
+    break;
+  default:
     break;
   }
 
@@ -229,6 +240,9 @@ void Controller::away_mode(String command) {
         facial_recognition_attempts = 0; // Reset the number of attempts
       }
       break;
+    case 'f':
+    default:
+      break;
     }
 
   // If the command is 'p', the user has entered a PIN to disarm the system
@@ -251,6 +265,8 @@ void Controller::away_mode(String command) {
     } else {
       Serial.println("dn");
     }
+    break;
+  default:
     break;
   }
 
