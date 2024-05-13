@@ -74,7 +74,14 @@ void Controller::disarmed_mode(String command) {
   case 's':
     switch (command.charAt(1)) {
     case 'd':
-      this->change_mode(SYSTEM_MODE::DISARMED);
+      if (this->authorisation_status) {
+        this->change_mode(SYSTEM_MODE::DISARMED);
+        this->authorisation_status = false;
+        this->last_triggered_at = -1;
+        Serial.println("dy");
+      } else {
+        Serial.println("dn");
+      }
       break;
     case 'h':
       this->change_mode(SYSTEM_MODE::HOME);
@@ -156,7 +163,14 @@ void Controller::home_mode(String command) {
   case 's':
     switch (command.charAt(1)) {
     case 'd':
-      this->change_mode(SYSTEM_MODE::DISARMED);
+      if (this->authorisation_status) {
+        this->change_mode(SYSTEM_MODE::DISARMED);
+        this->authorisation_status = false;
+        this->last_triggered_at = -1;
+        Serial.println("dy");
+      } else {
+        Serial.println("dn");
+      }
       break;
     case 'h':
       this->change_mode(SYSTEM_MODE::HOME);
