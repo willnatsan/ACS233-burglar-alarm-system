@@ -22,6 +22,8 @@ def send_pin():
     entered_pin = "p" + PinEntry.get() + "\n"
     ser.write(entered_pin.encode('utf-8'))
 
+    PinEntry.delete(0, 'end')
+
 # Button functions for SettingPage
 def exit():
     close_SettingPage()
@@ -59,11 +61,29 @@ def homestate():
     state = "sh\n"
     ser.write(state.encode('utf-8'))
     StateLabel.config(text = "Operational\nState: H")
+    PinPage.after(500, PinPage.deiconify)
+
+def update_button_text(count):
+    if count > 0:
+        AwayStateButton.config(text=f"Away {count}")
+        # Schedule the next update after 1000 milliseconds (1 second)
+        SettingPage.after(1000, update_button_text, count - 1)
+    else:
+        # Call the exit function after the countdown is finished
+        state = "sa\n"
+        ser.write(state.encode('utf-8'))
+        exit()
 
 def awaystate():
-    state = "sa\n"
-    ser.write(state.encode('utf-8'))
     StateLabel.config(text = "Operational\nState: A")
+    state = "sa\n"
+    #ser.write(state.encode('utf-8'))
+    try:
+        entered_delay = int(away_delay.get())
+    except:
+        messagebox.showerror("Error", "Enter NUMBERS only!")
+    
+    update_button_text(entered_delay)
 
 # General button functions
 def open_SettingPage():
@@ -209,6 +229,10 @@ ChangePinEntry = tk.Entry(SettingPage, width = 1, bg = '#FFFFFF', font = ('Conso
 ChangePinEntry.grid(row = 10, column = 20, columnspan = 8, rowspan = 2, sticky = "NSEW")
 ChangePinEntry.insert(0, "")
 
+away_delay = tk.Entry(SettingPage, width = 1, bg = '#FFFFFF', font = ('Consolas', 18), justify = 'center')
+away_delay.grid(row = 16, column = 13, columnspan = 2, rowspan = 2, sticky = "NSEW")
+away_delay.insert(0, "")
+
 ExitButton = tk.Button(SettingPage, text = "Exit", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', command = exit, bg = '#e6695b')
 ExitButton.grid(row = 31, column = 54, columnspan = 7, rowspan = 4, sticky = "NSEW")
 ShutDownButton = tk.Button(SettingPage, text = "Shutdown", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', command = shutdown, bg = '#e6695b')
@@ -240,7 +264,7 @@ SettingPage.withdraw()
 ser = serial.Serial("/dev/ttyACM0", baudrate=115200, timeout = 1)
 ser.flush()
 
-def received_serial_command(command):
+def received_serial_command(command, face_match):
     print(command)
     if command[0] == 'p':
         if command[1] == 'y':
@@ -313,7 +337,7 @@ while loop:
     if ser.in_waiting > 0:
         line = ser.readline().decode("utf-8").strip()
         print(line)
-        received_serial_command(line)
+        received_serial_command(line, face_match)
     
     
     # Running tkinter window
