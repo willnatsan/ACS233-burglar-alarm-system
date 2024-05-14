@@ -89,7 +89,6 @@ void Controller::disarmed_mode(String command) {
       break;
     case 'a':
       this->change_mode(SYSTEM_MODE::AWAY);
-      this->last_armed_at = millis();
       break;
     default:
       break;
@@ -117,6 +116,8 @@ void Controller::disarmed_mode(String command) {
   default:
     break;
   }
+
+  this->check_timeouts();
 }
 
 void Controller::home_mode(String command) {
@@ -163,7 +164,6 @@ void Controller::home_mode(String command) {
     if (this->authorisation_status) {
       this->change_mode(SYSTEM_MODE::DISARMED);
       this->authorisation_status = false;
-      this->last_triggered_at = -1;
       Serial.println("dy");
     } else {
       Serial.println("dn");
@@ -177,7 +177,6 @@ void Controller::home_mode(String command) {
       if (this->authorisation_status) {
         this->change_mode(SYSTEM_MODE::DISARMED);
         this->authorisation_status = false;
-        this->last_triggered_at = -1;
         Serial.println("dy");
       } else {
         Serial.println("dn");
@@ -188,7 +187,6 @@ void Controller::home_mode(String command) {
       break;
     case 'a':
       this->change_mode(SYSTEM_MODE::AWAY);
-      this->last_armed_at = millis();
       break;
     default:
       break;
@@ -262,7 +260,6 @@ void Controller::away_mode(String command) {
     if (this->authorisation_status) {
       this->change_mode(SYSTEM_MODE::DISARMED);
       this->authorisation_status = false;
-      this->last_triggered_at = -1;
       Serial.println("dy");
     } else {
       Serial.println("dn");
@@ -322,27 +319,27 @@ void Controller::magnetic_sensor_isr() {
 }
 
 void Controller::pir_sensor_isr() {
-  // if (millis() - pir->last_triggered_at >= MOTION_SENSOR_TIMEOUT) {
-  pir->pir_state = (PIR_SENSOR_STATE)pir->read();
+  if (millis() - pir->last_triggered_at >= MOTION_SENSOR_TIMEOUT) {
+    pir->pir_state = (PIR_SENSOR_STATE)pir->read();
 
-  if (pir->pir_state == PIR_SENSOR_STATE::MOTION_DETECTED) {
-    switch (this->current_mode) {
-    case SYSTEM_MODE::AWAY:
-      if (this->last_armed_at != -1 &&
-          millis() - this->last_armed_at >= ARMING_TIMEOUT) {
-        this->last_triggered_at = millis();
-        this->last_armed_at = -1;
+    if (pir->pir_state == PIR_SENSOR_STATE::MOTION_DETECTED) {
+      switch (this->current_mode) {
+      case SYSTEM_MODE::AWAY:
+        if (this->last_armed_at != -1 &&
+            millis() - this->last_armed_at >= ARMING_TIMEOUT) {
+          this->last_triggered_at = millis();
+          this->last_armed_at = -1;
+        }
+        break;
+      case SYSTEM_MODE::HOME:
+      case SYSTEM_MODE::DISARMED:
+      default:
+        break;
       }
-      break;
-    case SYSTEM_MODE::HOME:
-    case SYSTEM_MODE::DISARMED:
-    default:
-      break;
     }
+    pir->last_triggered_at = millis();
   }
-  pir->last_triggered_at = millis();
 }
-// }
 
 void Controller::button_isr() {
   if (millis() - button->last_triggered_at >= DEBOUNCE_DURATION) {
@@ -355,12 +352,26 @@ void Controller::button_isr() {
   }
 }
 
-void Controller::change_mode(SYSTEM_MODE mode) { this->current_mode = mode; }
+void Controller::change_mode(SYSTEM_MODE mode) {
+  this->current_mode = mode;
+  if (mode == SYSTEM_MODE::DISARMED) {
+    this->last_triggered_at = -1;
+    this->last_armed_at = -1;
+  } else if (mode == SYSTEM_MODE::HOME) {
+    this->authorisation_status = false;
+  } else if (mode == SYSTEM_MODE::AWAY) {
+    this->authorisation_status = false;
+    this->last_armed_at = millis();
+  }
+}
 
 void Controller::check_timeouts() {
+  // Serial.println(this->authorisation_status);
+
   // Check if the user has been authorised within the allocated time
   if (!this->authorisation_status &&
-      millis() - this->last_triggered_at >= PIN_ENTRY_TIMEOUT) {
+      millis() - this->last_triggered_at >= PIN_ENTRY_TIMEOUT &&
+      this->last_triggered_at != -1) {
     buzzer->on();
     buzzer_led->blink();
     buzzer->last_buzzed_at = millis();

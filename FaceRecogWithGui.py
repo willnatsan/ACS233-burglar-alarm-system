@@ -22,8 +22,6 @@ def send_pin():
     entered_pin = "p" + PinEntry.get() + "\n"
     ser.write(entered_pin.encode('utf-8'))
 
-    PinEntry.delete(0, 'end')
-
 # Button functions for SettingPage
 def exit():
     close_SettingPage()
@@ -61,7 +59,7 @@ def homestate():
     state = "sh\n"
     ser.write(state.encode('utf-8'))
     StateLabel.config(text = "Operational\nState: H")
-    PinPage.after(500, PinPage.deiconify)
+    SettingPage.after(500, exit)
 
 def update_button_text(count):
     if count > 0:
@@ -97,19 +95,25 @@ def close_SettingPage():
     
 def display_state(p_state, m_state, s_state):
     if p_state:
-        pir_state.config(bg="#e6695b")
+        # if not hc_state:
+            pir_state.config(bg="#e6695b")
     else:
-        pir_state.config(bg="#00FFC7")
+        # if not hc_state:
+            pir_state.config(bg="#00FFC7")
         
     if m_state:
-        mag_state.config(bg="#e6695b")
+        # if not hc_state:
+            mag_state.config(bg="#e6695b")
     else:
-        mag_state.config(bg="#00FFC7")
+        # if not hc_state:
+            mag_state.config(bg="#00FFC7")
         
     if s_state:
-        sol_state.config(bg="#e6695b")
+        # if not hc_state:
+            sol_state.config(bg="#e6695b")
     else:
-        sol_state.config(bg="#00FFC7")
+        # if not hc_state:
+            sol_state.config(bg="#00FFC7")
 
 hc_state = 1        
 def high_contrast_toggle():
@@ -271,10 +275,6 @@ def received_serial_command(command, face_match):
             open_SettingPage()
         elif command[1] == 'n':
             messagebox.showerror("Error", "Incorrect PIN!")
-            
-    if command[0] == 'f':
-        face = "f" + face_match + "\n"
-        ser.write(face.encode('utf-8'))
         
     if command[0] == 'x':
         m_state = int(command[1])
@@ -328,7 +328,10 @@ def check_face(frame):
         except ValueError:
             face_match = "f"
     else:
-        face_match = "f"
+        face_match = "f"\
+    
+    face = "f" + face_match + "\n"
+    ser.write(face.encode("utf-8"))
         
         
 # Main Loop ================================================================================================================
