@@ -53,14 +53,17 @@ def changepin():
 def disarmedstate():
     state = "sd\n"
     ser.write(state.encode('utf-8'))
+    StateLabel.config(text = "Operational\nState: D")
 
 def homestate():
     state = "sh\n"
     ser.write(state.encode('utf-8'))
+    StateLabel.config(text = "Operational\nState: H")
 
 def awaystate():
     state = "sa\n"
     ser.write(state.encode('utf-8'))
+    StateLabel.config(text = "Operational\nState: A")
 
 # General button functions
 def open_SettingPage():
@@ -72,7 +75,7 @@ def close_SettingPage():
     PinPage.deiconify()  # Show the first window
     PinEntry.delete(0, 'end')  # Clear the password entry field
     
-def display_state():
+def display_state(p_state, m_state, s_state):
     if p_state:
         pir_state.config(bg="#e6695b")
     else:
@@ -87,6 +90,58 @@ def display_state():
         sol_state.config(bg="#e6695b")
     else:
         sol_state.config(bg="#00FFC7")
+
+hc_state = 1        
+def high_contrast_toggle():
+    global hc_state
+    if hc_state:
+        TopPanelLabel.config(fg = "#FFFF00", bg="#000000")
+        StateLabel.config(fg = "#FFFF00", bg="#000000")
+        ChangePinLabel.config(fg = "#FFFF00", bg="#000000")
+        RegFaceLabel.config(fg = "#FFFF00", bg="#000000")
+        DelFaceLabel.config(fg = "#FFFF00", bg="#000000")
+        split_1.config(fg = "#FFFF00", bg="#000000")
+        split_2.config(fg = "#FFFF00", bg="#000000")
+        pir_state.config(fg = "#FFFF00", bg="#000000")
+        mag_state.config(fg = "#FFFF00", bg="#000000")
+        sol_state.config(fg = "#FFFF00", bg="#000000")
+
+        ExitButton.config(fg = "#FFFF00", bg="#000000")
+        ShutDownButton.config(fg = "#FFFF00", bg="#000000")
+        DissarmButton.config(fg = "#FFFF00", bg="#000000")
+        RunTestButton.config(fg = "#FFFF00", bg="#000000")
+        DeleteFaceButton.config(fg = "#FFFF00", bg="#000000")
+        RegisterFaceButton.config(fg = "#FFFF00", bg="#000000")
+        ChangePinButton.config(fg = "#FFFF00", bg="#000000")
+        DissarmedStateButton.config(fg = "#FFFF00", bg="#000000")
+        HomeStateButton.config(fg = "#FFFF00", bg="#000000")
+        AwayStateButton.config(fg = "#FFFF00", bg="#000000")
+    
+        hc_state = 0
+    else:
+        TopPanelLabel.config(fg = "#000000", bg="#3a5a78")
+        StateLabel.config(fg = "#000000", bg="#3a5a78")
+        ChangePinLabel.config(fg = "#000000", bg="#3a5a78")
+        RegFaceLabel.config(fg = "#000000", bg="#3a5a78")
+        DelFaceLabel.config(fg = "#000000", bg="#3a5a78")
+        split_1.config(fg = "#000000", bg="#3a5a78")
+        split_2.config(fg = "#000000", bg="#3a5a78")
+        pir_state.config(fg = "#000000", bg="#00FFC7")
+        mag_state.config(fg = "#000000", bg="#00FFC7")
+        sol_state.config(fg = "#000000", bg="#00FFC7")
+
+        ExitButton.config(fg = "#000000", bg="#e6695b")
+        ShutDownButton.config(fg = "#000000", bg="#e6695b")
+        DissarmButton.config(fg = "#000000", bg="#e6695b")
+        RunTestButton.config(fg = "#000000", bg="#668db2")
+        DeleteFaceButton.config(fg = "#000000", bg="#668db2")
+        RegisterFaceButton.config(fg = "#000000", bg="#668db2")
+        ChangePinButton.config(fg = "#000000", bg="#668db2")
+        DissarmedStateButton.config(fg = "#000000", bg="#668db2")
+        HomeStateButton.config(fg = "#000000", bg="#668db2")
+        AwayStateButton.config(fg = "#000000", bg="#668db2")
+        
+        hc_state = 1
     
     
 
@@ -131,7 +186,7 @@ SettingPage.resizable(False, False)
 
 TopPanelLabel = tk.Label(SettingPage, text = "Configuration Panel", font = ('Consolas', 26), width = 1, height = 1, fg = '#000000', bg = '#3a5a78')
 TopPanelLabel.grid(row = 0, column = 0, columnspan = 64, rowspan = 4, sticky = "NSEW")
-StateLabel = tk.Label(SettingPage, text = "Operational State:", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', bg = '#3a5a78')
+StateLabel = tk.Label(SettingPage, text = "Operational\nState: D", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', bg = '#3a5a78')
 StateLabel.grid(row = 5, column = 3, columnspan = 10, rowspan = 3, sticky = "NSEW")
 ChangePinLabel = tk.Label(SettingPage, text = "Change Pin:", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', bg = '#3a5a78')
 ChangePinLabel.grid(row = 5, column = 19, columnspan = 10, rowspan = 3, sticky = "NSEW")
@@ -143,13 +198,11 @@ split_1 = tk.Label(SettingPage, text = "", font = ('Arial', 16), width = 1, heig
 split_1.grid(row = 19, column = 0, columnspan = 64, rowspan = 2, sticky = "NSEW")
 split_2 = tk.Label(SettingPage, text = "", font = ('Arial', 16), width = 1, height = 1, fg = '#000000', bg = '#3a5a78')
 split_2.grid(row = 28, column = 0, columnspan = 64, rowspan = 2, sticky = "NSEW")
-sensor_state = tk.Label(SettingPage, text = "State:", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', bg = '#3a5a78')
-sensor_state.grid(row = 23, column = 4, columnspan = 8, rowspan = 3, sticky = "NSEW")
 pir_state = tk.Label(SettingPage, text = "PIR State", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', bg = '#00FFC7')
 pir_state.grid(row = 23, column = 20, columnspan = 8, rowspan = 3, sticky = "NSEW")
 mag_state = tk.Label(SettingPage, text = "Mag State", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', bg = '#00FFC7')
 mag_state.grid(row = 23, column = 36, columnspan = 8, rowspan = 3, sticky = "NSEW")
-sol_state = tk.Label(SettingPage, text = "Lock State", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', bg = '#00FFC7')
+sol_state = tk.Label(SettingPage, text = "Solenoid\nState", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', bg = '#00FFC7')
 sol_state.grid(row = 23, column = 52, columnspan = 8, rowspan = 3, sticky = "NSEW")
 
 ChangePinEntry = tk.Entry(SettingPage, width = 1, bg = '#FFFFFF', font = ('Consolas', 16), justify = 'center')
@@ -160,22 +213,24 @@ ExitButton = tk.Button(SettingPage, text = "Exit", font = ('Consolas', 18), widt
 ExitButton.grid(row = 31, column = 54, columnspan = 7, rowspan = 4, sticky = "NSEW")
 ShutDownButton = tk.Button(SettingPage, text = "Shutdown", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', command = shutdown, bg = '#e6695b')
 ShutDownButton.grid(row = 31, column = 44, columnspan = 7, rowspan = 4, sticky = "NSEW")
-DisarmButton = tk.Button(SettingPage, text = "Disarm", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', command = disarm, bg = '#e6695b')
-DisarmButton.grid(row = 31, column = 34, columnspan = 7, rowspan = 4, sticky = "NSEW")
+DissarmButton = tk.Button(SettingPage, text = "Disarm", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', command = disarm, bg = '#e6695b')
+DissarmButton.grid(row = 31, column = 34, columnspan = 7, rowspan = 4, sticky = "NSEW")
 RunTestButton = tk.Button(SettingPage, text = "Run Test", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', command = runtest, bg = '#668db2')
-RunTestButton.grid(row = 31, column = 3, columnspan = 7, rowspan = 4, sticky = "NSEW")
+RunTestButton.grid(row = 23, column = 4, columnspan = 8, rowspan = 3, sticky = "NSEW")
 DeleteFaceButton = tk.Button(SettingPage, text = "Delete", font = ('Consolas', 16), width = 1, height = 1, fg = '#000000', command = delface, bg = '#668db2')
 DeleteFaceButton.grid(row = 10, column = 52, columnspan = 8, rowspan = 2, sticky = "NSEW")
 RegisterFaceButton = tk.Button(SettingPage, text = "Register", font = ('Consolas', 16), width = 1, height = 1, fg = '#000000', command = regface, bg = '#668db2')
 RegisterFaceButton.grid(row = 10, column = 36, columnspan = 8, rowspan = 2, sticky = "NSEW")
 ChangePinButton = tk.Button(SettingPage, text = "Change", font = ('Consolas', 16), width = 1, height = 1, fg = '#000000', command = changepin, bg = '#668db2')
 ChangePinButton.grid(row = 13, column = 20, columnspan = 8, rowspan = 2, sticky = "NSEW")
-DisarmedStateButton = tk.Button(SettingPage, text = "Disarmed", font = ('Consolas', 16), width = 1, height = 1, fg = '#000000', command = disarmedstate, bg = '#668db2')
-DisarmedStateButton.grid(row = 10, column = 4, columnspan = 8, rowspan = 2, sticky = "NSEW")
+DissarmedStateButton = tk.Button(SettingPage, text = "Disarmed", font = ('Consolas', 16), width = 1, height = 1, fg = '#000000', command = disarmedstate, bg = '#668db2')
+DissarmedStateButton.grid(row = 10, column = 4, columnspan = 8, rowspan = 2, sticky = "NSEW")
 HomeStateButton = tk.Button(SettingPage, text = "Home ", font = ('Consolas', 16), width = 1, height = 1, fg = '#000000', command = homestate, bg = '#668db2')
 HomeStateButton.grid(row = 13, column = 4, columnspan = 8, rowspan = 2, sticky = "NSEW")
 AwayStateButton = tk.Button(SettingPage, text = "Away", font = ('Consolas', 16), width = 1, height = 1, fg = '#000000', command = awaystate, bg = '#668db2')
 AwayStateButton.grid(row = 16, column = 4, columnspan = 8, rowspan = 2, sticky = "NSEW")
+HCToggle = tk.Button(SettingPage, text = "High\nContrast", font = ('Consolas', 18), width = 1, height = 1, fg = '#FFFF00', command = high_contrast_toggle, bg = '#000000')
+HCToggle.grid(row = 31, column = 3, columnspan = 7, rowspan = 4, sticky = "NSEW")
 
 
 # Hide the second window initially
@@ -186,6 +241,7 @@ ser = serial.Serial("/dev/ttyACM0", baudrate=115200, timeout = 1)
 ser.flush()
 
 def received_serial_command(command):
+    print(command)
     if command[0] == 'p':
         if command[1] == 'y':
             open_SettingPage()
@@ -201,7 +257,7 @@ def received_serial_command(command):
         # m_state = int(command[2])
         p_state = int(command[3])
         s_state = int(command[4])
-        display_state()
+        display_state(p_state, m_state, s_state)
         
 
     
