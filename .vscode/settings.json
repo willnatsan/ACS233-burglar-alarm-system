@@ -1,3 +1,4 @@
 {
-    "C_Cpp.default.compilerPath": "/home/willnatsan/.platformio/packages/toolchain-atmelavr/bin/avr-gcc"
+    "C_Cpp.default.compilerPath": "/home/willnatsan/.platformio/packages/toolchain-atmelavr/bin/avr-gcc",
+    "cmake.configureOnOpen": false
 }

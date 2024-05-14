@@ -32,6 +32,7 @@ void MagneticSensor::setup() {
 // PIR Motion Sensor for detecting motion
 PIRSensor::PIRSensor(uint8_t pin, void (*isr)()) : Sensor(pin, isr) {
   this->pir_state = (PIR_SENSOR_STATE)this->read();
+  // this->pir_state = PIR_SENSOR_STATE::NO_MOTION;
 }
 
 // Button Sensor for detecting button press

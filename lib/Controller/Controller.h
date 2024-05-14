@@ -9,10 +9,10 @@
 #include "Sensor.h"
 #include "Solenoid.h"
 
-#define ALARM_TIMEOUT 20000 // The limit is 20 mins, but for testing 20s is used
-#define PIN_ENTRY_TIMEOUT 10000
+#define ALARM_TIMEOUT 5000 // The limit is 20 mins, but for testing 20s is used
+#define PIN_ENTRY_TIMEOUT 3000
 #define DOOR_LOCK_TIMEOUT 2000
-#define ARMING_TIMEOUT 5000
+#define ARMING_TIMEOUT 2000
 #define MOTION_SENSOR_TIMEOUT 5000
 
 // From testing a duration of 50ms seems to work well to prevent switch bounce

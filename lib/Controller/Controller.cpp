@@ -61,13 +61,38 @@ void Controller::disarmed_mode(String command) {
   // Read the command received from the GUI and act accordingly
   switch (command.charAt(0)) {
 
-  // If the command is 'p', the user has enetered a PIN to enter the settings
+    // If the command is 'p', the user has enetered a PIN to enter the settings
+
+    // case 'f':
+    //   facial_recognition_attempts++;
+    //   switch (command.charAt(1)) {
+    //   case 'y':
+    //     solenoid->unlock();
+    //     solenoid_led->blink();
+    //     solenoid->last_unlocked_at = millis();
+    //     facial_recognition_attempts = 0; // Reset the number of attempts
+    //     Serial.println("fy");
+    //     break;
+    //   case 'n':
+    //     if (facial_recognition_attempts >= 3) {
+    //       facial_recognition_attempts = 0; // Reset the number of attempts
+    //       Serial.println("fn");
+    //     }
+    //     break;
+    //   case 'f':
+    //   default:
+    //     break;
+    //   }
+
   case 'p':;
-    if (command.substring(1).equals(this->correct_pin)) {
-      this->authorisation_status = true;
-      Serial.println("py");
-    } else {
-      Serial.println("pn");
+    if (command.length() >= 3) {
+      if (command.substring(1).equals(this->correct_pin)) {
+        this->authorisation_status = true;
+        Serial.println("py");
+      } else {
+        Serial.println("pn");
+        break;
+      }
     }
     break;
 
@@ -148,14 +173,17 @@ void Controller::home_mode(String command) {
       break;
     }
 
-  // If the command is 'p', the user has entered a PIN to enter the settings OR
-  // disarm the system
+  // If the command is 'p', the user has entered a PIN to enter the settings
+  // OR disarm the system
   case 'p':
-    if (command.substring(1).equals(this->correct_pin)) {
-      this->authorisation_status = true;
-      Serial.println("py");
-    } else {
-      Serial.println("pn");
+    if (command.length() >= 3) {
+      if (command.substring(1).equals(this->correct_pin)) {
+        this->authorisation_status = true;
+        Serial.println("py");
+      } else {
+        Serial.println("pn");
+        break;
+      }
     }
     break;
 
@@ -247,11 +275,14 @@ void Controller::away_mode(String command) {
 
   // If the command is 'p', the user has entered a PIN to disarm the system
   case 'p':
-    if (command.substring(1).equals(this->correct_pin)) {
-      this->authorisation_status = true;
-      Serial.println("py");
-    } else {
-      Serial.println("pn");
+    if (command.length() >= 3) {
+      if (command.substring(1).equals(this->correct_pin)) {
+        this->authorisation_status = true;
+        Serial.println("py");
+      } else {
+        Serial.println("pn");
+        break;
+      }
     }
     break;
 
@@ -319,6 +350,7 @@ void Controller::magnetic_sensor_isr() {
 }
 
 void Controller::pir_sensor_isr() {
+  // pir->pir_state = PIR_SENSOR_STATE::NO_MOTION;
   if (millis() - pir->last_triggered_at >= MOTION_SENSOR_TIMEOUT) {
     pir->pir_state = (PIR_SENSOR_STATE)pir->read();
 
@@ -378,8 +410,9 @@ void Controller::check_timeouts() {
   }
 
   // Check if the alarm has been activated for more than the allocated time
-  if (buzzer->buzzer_state == BUZZER_STATE::ON &&
-      millis() - buzzer->last_buzzed_at >= ALARM_TIMEOUT) {
+  if ((buzzer->buzzer_state == BUZZER_STATE::ON &&
+       millis() - buzzer->last_buzzed_at >= ALARM_TIMEOUT) ||
+      this->authorisation_status) {
     buzzer->off();
     buzzer_led->off();
     buzzer->last_buzzed_at = -1;

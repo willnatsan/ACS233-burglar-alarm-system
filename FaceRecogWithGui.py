@@ -6,6 +6,8 @@ import tkinter as tk
 from tkinter import messagebox
 from pathlib import Path
 import os
+import threading
+import time
 
 
 # Global variables =========================================================================================================
@@ -19,8 +21,13 @@ m_state = 0;
 # Tkinter code =============================================================================================================
 # Button functions for PinPage
 def send_pin():
+    
     entered_pin = "p" + PinEntry.get() + "\n"
+    #print("Bullshit")
+    print(entered_pin)
     ser.write(entered_pin.encode('utf-8'))
+    PinPage.after(100, PinEntry.delete(0, tk.END)) # Clear the password entry field
+
 
 # Button functions for SettingPage
 def exit():
@@ -33,6 +40,8 @@ def shutdown():
 def disarm():
     dis = "d\n"
     ser.write(dis.encode('utf-8'))
+    StateLabel.config(text = "Operational\nState: D")
+
       
 def runtest():
     test = "r\n"
@@ -47,7 +56,7 @@ def regface():
     os.system(f'thunar {folder_path}')
       
 def changepin():
-    newpin = "r" + ChangePinEntry.get() + "\n"
+    newpin = "c" + ChangePinEntry.get() + "\n"
     ser.write(newpin.encode('utf-8'))
 
 def disarmedstate():
@@ -56,10 +65,10 @@ def disarmedstate():
     StateLabel.config(text = "Operational\nState: D")
 
 def homestate():
+    close_SettingPage()
     state = "sh\n"
     ser.write(state.encode('utf-8'))
     StateLabel.config(text = "Operational\nState: H")
-    SettingPage.after(500, exit)
 
 def update_button_text(count):
     if count > 0:
@@ -80,18 +89,19 @@ def awaystate():
         entered_delay = int(away_delay.get())
     except:
         messagebox.showerror("Error", "Enter NUMBERS only!")
-    
+    #time.sleep(entered_delay)
     update_button_text(entered_delay)
+    #xit()
 
 # General button functions
 def open_SettingPage():
-    PinPage.withdraw()  # Hide the first window
+    #PinPage.withdraw()  # Hide the first window
     SettingPage.deiconify()  # Show the second window
+    AwayStateButton.config(text="Away")
 
 def close_SettingPage():
     SettingPage.withdraw()  # Hide the second window
-    PinPage.deiconify()  # Show the first window
-    PinEntry.delete(0, 'end')  # Clear the password entry field
+    #PinPage.deiconify()  # Show the first window
     
 def display_state(p_state, m_state, s_state):
     if p_state:
@@ -331,6 +341,7 @@ def check_face(frame):
         face_match = "f"\
     
     face = "f" + face_match + "\n"
+    print(face)
     ser.write(face.encode("utf-8"))
         
         
@@ -340,7 +351,7 @@ while loop:
     if ser.in_waiting > 0:
         line = ser.readline().decode("utf-8").strip()
         print(line)
-        received_serial_command(line, face_match)
+        received_serial_command(line, face_match) 
     
     
     # Running tkinter window
