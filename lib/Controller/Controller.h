@@ -13,11 +13,7 @@
 #define PIN_ENTRY_TIMEOUT 10000
 #define DOOR_LOCK_TIMEOUT 2000
 #define ARMING_TIMEOUT 5000
-
-// From testing the motion sensor seems to hold a HIGH value for 10-20s after
-// motion is detected A timeout of 25s seems to work well to prevent false
-// alarms
-#define MOTION_SENSOR_TIMEOUT 25000
+#define MOTION_SENSOR_TIMEOUT 5000
 
 // From testing a duration of 50ms seems to work well to prevent switch bounce
 #define DEBOUNCE_DURATION 50

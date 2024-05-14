@@ -51,7 +51,7 @@ void loop() {
     break;
   }
 
-  if (millis() - timestamp > 5000) {
+  if (millis() - timestamp > 500) {
     controller.check_status();
     timestamp = millis();
   }

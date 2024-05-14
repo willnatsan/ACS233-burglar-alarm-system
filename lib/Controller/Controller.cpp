@@ -322,24 +322,25 @@ void Controller::magnetic_sensor_isr() {
 }
 
 void Controller::pir_sensor_isr() {
-  pir->last_triggered_at = millis();
-  pir->pir_state = (PIR_SENSOR_STATE)pir->read();
+  if (millis() - pir->last_triggered_at >= MOTION_SENSOR_TIMEOUT) {
+    pir->pir_state = (PIR_SENSOR_STATE)pir->read();
 
-  if (pir->pir_state == PIR_SENSOR_STATE::MOTION_DETECTED &&
-      millis() - pir->last_triggered_at >= MOTION_SENSOR_TIMEOUT) {
-    switch (this->current_mode) {
-    case SYSTEM_MODE::AWAY:
-      if (this->last_armed_at != -1 &&
-          millis() - this->last_armed_at >= ARMING_TIMEOUT) {
-        this->last_triggered_at = millis();
-        this->last_armed_at = -1;
+    if (pir->pir_state == PIR_SENSOR_STATE::MOTION_DETECTED) {
+      switch (this->current_mode) {
+      case SYSTEM_MODE::AWAY:
+        if (this->last_armed_at != -1 &&
+            millis() - this->last_armed_at >= ARMING_TIMEOUT) {
+          this->last_triggered_at = millis();
+          this->last_armed_at = -1;
+        }
+        break;
+      case SYSTEM_MODE::HOME:
+      case SYSTEM_MODE::DISARMED:
+      default:
+        break;
       }
-      break;
-    case SYSTEM_MODE::HOME:
-    case SYSTEM_MODE::DISARMED:
-    default:
-      break;
     }
+    pir->last_triggered_at = millis();
   }
 }
 
@@ -359,7 +360,7 @@ void Controller::change_mode(SYSTEM_MODE mode) { this->current_mode = mode; }
 void Controller::check_timeouts() {
   // Check if the user has been authorised within the allocated time
   if (!this->authorisation_status &&
-      millis() - last_triggered_at >= PIN_ENTRY_TIMEOUT) {
+      millis() - this->last_triggered_at >= PIN_ENTRY_TIMEOUT) {
     buzzer->on();
     buzzer_led->blink();
     buzzer->last_buzzed_at = millis();
