@@ -40,11 +40,11 @@ def runtest():
 
 def delface():
     folder_path = r"/home/willnatsan/Pictures/Webcam/"
-    os.system(f'explorer {folder_path}')
+    os.system(f'thunar {folder_path}')
       
 def regface():
     folder_path = r"/home/willnatsan/Pictures/Webcam/"
-    os.system(f'explorer {folder_path}')
+    os.system(f'thunar {folder_path}')
       
 def changepin():
     newpin = "r" + ChangePinEntry.get() + "\n"
@@ -188,21 +188,21 @@ TopPanelLabel = tk.Label(SettingPage, text = "Configuration Panel", font = ('Con
 TopPanelLabel.grid(row = 0, column = 0, columnspan = 64, rowspan = 4, sticky = "NSEW")
 StateLabel = tk.Label(SettingPage, text = "Operational\nState: D", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', bg = '#3a5a78')
 StateLabel.grid(row = 5, column = 3, columnspan = 10, rowspan = 3, sticky = "NSEW")
-ChangePinLabel = tk.Label(SettingPage, text = "Change Pin:", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', bg = '#3a5a78')
+ChangePinLabel = tk.Label(SettingPage, text = "Change PIN", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', bg = '#3a5a78')
 ChangePinLabel.grid(row = 5, column = 19, columnspan = 10, rowspan = 3, sticky = "NSEW")
-RegFaceLabel = tk.Label(SettingPage, text = "Register Face:", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', bg = '#3a5a78')
+RegFaceLabel = tk.Label(SettingPage, text = "Register Face", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', bg = '#3a5a78')
 RegFaceLabel.grid(row = 5, column = 35, columnspan = 10, rowspan = 3, sticky = "NSEW")
-DelFaceLabel = tk.Label(SettingPage, text = "Delete Face:", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', bg = '#3a5a78')
+DelFaceLabel = tk.Label(SettingPage, text = "Delete Face", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', bg = '#3a5a78')
 DelFaceLabel.grid(row = 5, column = 51, columnspan = 10, rowspan = 3, sticky = "NSEW")
 split_1 = tk.Label(SettingPage, text = "", font = ('Arial', 16), width = 1, height = 1, fg = '#000000', bg = '#3a5a78')
 split_1.grid(row = 19, column = 0, columnspan = 64, rowspan = 2, sticky = "NSEW")
 split_2 = tk.Label(SettingPage, text = "", font = ('Arial', 16), width = 1, height = 1, fg = '#000000', bg = '#3a5a78')
 split_2.grid(row = 28, column = 0, columnspan = 64, rowspan = 2, sticky = "NSEW")
-pir_state = tk.Label(SettingPage, text = "PIR State", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', bg = '#00FFC7')
+pir_state = tk.Label(SettingPage, text = "PIR\nState", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', bg = '#00FFC7')
 pir_state.grid(row = 23, column = 20, columnspan = 8, rowspan = 3, sticky = "NSEW")
-mag_state = tk.Label(SettingPage, text = "Mag State", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', bg = '#00FFC7')
+mag_state = tk.Label(SettingPage, text = "Mag\nState", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', bg = '#00FFC7')
 mag_state.grid(row = 23, column = 36, columnspan = 8, rowspan = 3, sticky = "NSEW")
-sol_state = tk.Label(SettingPage, text = "Solenoid\nState", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', bg = '#00FFC7')
+sol_state = tk.Label(SettingPage, text = "Lock\nState", font = ('Consolas', 18), width = 1, height = 1, fg = '#000000', bg = '#00FFC7')
 sol_state.grid(row = 23, column = 52, columnspan = 8, rowspan = 3, sticky = "NSEW")
 
 ChangePinEntry = tk.Entry(SettingPage, width = 1, bg = '#FFFFFF', font = ('Consolas', 16), justify = 'center')
