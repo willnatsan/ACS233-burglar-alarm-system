@@ -14,4 +14,7 @@ void LED::blink() {
   delay(BLINK_DELAY);
   this->off();
   delay(BLINK_DELAY);
+  this->on();
+  delay(BLINK_DELAY);
+  this->off();
 }

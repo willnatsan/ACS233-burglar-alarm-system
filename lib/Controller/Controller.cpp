@@ -37,8 +37,9 @@ Controller::Controller(uint8_t door_mag_pin, uint8_t window_mag_pin,
   // Set the correct PIN to "1234" by default
   correct_pin = "1234";
 
-  // Set the last armed time to -1
+  // Set the last armed and triggered time to -1
   last_triggered_at = -1;
+  last_armed_at = -1;
 
   // Set the number of facial recognition attempts to 0
   facial_recognition_attempts = 0;
@@ -88,6 +89,7 @@ void Controller::disarmed_mode(String command) {
       break;
     case 'a':
       this->change_mode(SYSTEM_MODE::AWAY);
+      this->last_armed_at = millis();
       break;
     default:
       break;
@@ -130,6 +132,7 @@ void Controller::home_mode(String command) {
     case 'y':
       solenoid->unlock();
       solenoid_led->blink();
+      solenoid->last_unlocked_at = millis();
       facial_recognition_attempts = 0; // Reset the number of attempts
       Serial.println("fy");
       break;
@@ -185,6 +188,7 @@ void Controller::home_mode(String command) {
       break;
     case 'a':
       this->change_mode(SYSTEM_MODE::AWAY);
+      this->last_armed_at = millis();
       break;
     default:
       break;
@@ -229,6 +233,7 @@ void Controller::away_mode(String command) {
     case 'y':
       solenoid->unlock();
       solenoid_led->blink();
+      solenoid->last_unlocked_at = millis();
       Serial.println("fy");
       break;
     case 'n':
@@ -299,6 +304,12 @@ void Controller::magnetic_sensor_isr() {
     } else if (door->mag_state == MAGNETIC_SENSOR_STATE::OPEN) {
       switch (this->current_mode) {
       case SYSTEM_MODE::AWAY:
+        if (this->last_armed_at != -1 &&
+            millis() - this->last_armed_at >= ARMING_TIMEOUT) {
+          this->last_triggered_at = millis();
+          this->last_armed_at = -1;
+        }
+        break;
       case SYSTEM_MODE::HOME:
         this->last_triggered_at = millis();
         break;
@@ -318,7 +329,11 @@ void Controller::pir_sensor_isr() {
       millis() - pir->last_triggered_at >= MOTION_SENSOR_TIMEOUT) {
     switch (this->current_mode) {
     case SYSTEM_MODE::AWAY:
-      this->last_triggered_at = millis();
+      if (this->last_armed_at != -1 &&
+          millis() - this->last_armed_at >= ARMING_TIMEOUT) {
+        this->last_triggered_at = millis();
+        this->last_armed_at = -1;
+      }
       break;
     case SYSTEM_MODE::HOME:
     case SYSTEM_MODE::DISARMED:
@@ -360,7 +375,8 @@ void Controller::check_timeouts() {
     buzzer_led->blink();
   }
 
-  // Check if the solenoid has been unlocked for more than the allocated time
+  // Check if the solenoid has been unlocked for more than the allocated
+  // time
   if (solenoid->solenoid_state == SOLENOID_STATE::UNLOCKED &&
       millis() - solenoid->last_unlocked_at >= DOOR_LOCK_TIMEOUT &&
       door->mag_state == MAGNETIC_SENSOR_STATE::CLOSED) {
